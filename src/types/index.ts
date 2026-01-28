@@ -1,0 +1,186 @@
+// ============================================
+// USER TYPES
+// ============================================
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// ============================================
+// EVENT TYPES
+// ============================================
+
+export interface WeddingEvent {
+  id: string;
+  weddingId: string; // Unique identifier for QR code URL
+  ownerId: string; // Firebase Auth UID
+  brideName: string;
+  groomName: string;
+  weddingDate: Date;
+  venue: string;
+  welcomeMessage?: string;
+  qrCodeUrl: string; // Full URL for QR code
+  coverImage?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateEventInput {
+  brideName: string;
+  groomName: string;
+  weddingDate: Date;
+  venue: string;
+  welcomeMessage?: string;
+  isActive?: boolean;
+  coverImage?: string;
+}
+
+export interface UpdateEventInput {
+  brideName?: string;
+  groomName?: string;
+  weddingDate?: Date;
+  venue?: string;
+  welcomeMessage?: string;
+  isActive?: boolean;
+}
+
+// ============================================
+// GUEST TYPES
+// ============================================
+
+export interface GuestEntry {
+  id: string;
+  weddingId: string;
+  guestName: string;
+  message?: string;
+  createdAt: Date;
+}
+
+// ============================================
+// WISH TYPES
+// ============================================
+
+export interface WeddingWish {
+  id: string;
+  eventId: string;
+  guestName: string;
+  message: string;
+  createdAt: Date;
+}
+
+export interface CreateWishInput {
+  guestName: string;
+  message: string;
+}
+
+// ============================================
+// PHOTO TYPES
+// ============================================
+
+export interface WeddingPhoto {
+  id: string;
+  eventId: string;
+  guestName: string;
+  url: string;
+  storagePath: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  caption?: string;
+  createdAt: Date;
+}
+
+export interface UploadPhotoInput {
+  guestName: string;
+  file: File;
+  caption?: string;
+}
+
+// ============================================
+// UI STATE TYPES
+// ============================================
+
+export interface LoadingState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface EventStats {
+  totalGuests: number;
+  totalWishes: number;
+  totalPhotos: number;
+}
+
+// ============================================
+// FORM TYPES
+// ============================================
+
+export interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+export interface RegisterFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  displayName: string;
+}
+
+export interface EventFormData {
+  brideName: string;
+  groomName: string;
+  weddingDate: string;
+  venue: string;
+  welcomeMessage: string;
+}
+
+export interface GuestSubmissionFormData {
+  guestName: string;
+  message: string;
+  photos: File[];
+}
+
+// ============================================
+// API RESPONSE TYPES
+// ============================================
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+// ============================================
+// COMPONENT PROPS TYPES
+// ============================================
+
+export interface EventCardProps {
+  event: WeddingEvent;
+  stats?: EventStats;
+  onView: (eventId: string) => void;
+  onEdit: (eventId: string) => void;
+  onDelete: (eventId: string) => void;
+}
+
+export interface WishCardProps {
+  wish: WeddingWish;
+}
+
+export interface PhotoCardProps {
+  photo: WeddingPhoto;
+  onView?: (photo: WeddingPhoto) => void;
+}
+
+export interface QRCodeDisplayProps {
+  url: string;
+  brideName: string;
+  groomName: string;
+  weddingId: string;
+}

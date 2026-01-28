@@ -1,0 +1,151 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==========================================
+    // HELPER FUNCTIONS
+    // ==========================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Check if user is the event owner
+    function isEventOwner(eventId) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/events/$(eventId)).data.ownerId == request.auth.uid;
+    }
+    
+    // Validate required string field
+    function isValidString(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+    
+    // Validate timestamp
+    function isValidTimestamp(value) {
+      return value is timestamp;
+    }
+    
+    // ==========================================
+    // USER PROFILES
+    // ==========================================
+    
+    match /users/{userId} {
+      // Users can only read/write their own profile
+      allow read: if isOwner(userId);
+      
+      allow create: if isOwner(userId) &&
+                    isValidString(request.resource.data.email, 5, 100) &&
+                    isValidString(request.resource.data.displayName, 2, 100);
+      
+      allow update: if isOwner(userId) &&
+                    isValidString(request.resource.data.displayName, 2, 100);
+      
+      allow delete: if isOwner(userId);
+    }
+    
+    // ==========================================
+    // WEDDING EVENTS
+    // ==========================================
+    
+    match /events/{eventId} {
+      // Event owners can read their own events
+      // Anyone can read event details for public wedding pages (if event exists and is active)
+      allow read: if isEventOwner(eventId) || 
+                   (resource != null && resource.data.isActive == true);
+      
+      // Only authenticated users can create events
+      allow create: if isAuthenticated() &&
+                    request.resource.data.ownerId == request.auth.uid &&
+                    isValidString(request.resource.data.brideName, 1, 100) &&
+                    isValidString(request.resource.data.groomName, 1, 100) &&
+                    isValidString(request.resource.data.venue, 1, 500) &&
+                    isValidString(request.resource.data.weddingId, 8, 8);
+      
+      // Only event owner can update their events
+      allow update: if isEventOwner(eventId) &&
+                    request.resource.data.ownerId == resource.data.ownerId &&
+                    request.resource.data.weddingId == resource.data.weddingId;
+      
+      // Only event owner can delete their events
+      allow delete: if isEventOwner(eventId);
+      
+      // ==========================================
+      // GUESTS SUBCOLLECTION
+      // ==========================================
+      
+      match /guests/{guestId} {
+        // Event owner can read all guest entries
+        allow read: if isEventOwner(eventId);
+        
+        // Anyone can create a guest entry (public submission)
+        // But only if the event is active
+        allow create: if get(/databases/$(database)/documents/events/$(eventId)).data.isActive == true &&
+                      isValidString(request.resource.data.guestName, 1, 100);
+        
+        // Guests cannot update or delete entries
+        allow update, delete: if false;
+      }
+      
+      // ==========================================
+      // WISHES SUBCOLLECTION
+      // ==========================================
+      
+      match /wishes/{wishId} {
+        // Event owner can read all wishes
+        // Public can read wishes for gallery display
+        allow read: if isEventOwner(eventId) || 
+                     get(/databases/$(database)/documents/events/$(eventId)).data.isActive == true;
+        
+        // Anyone can create a wish (public submission)
+        // But only if the event is active
+        allow create: if get(/databases/$(database)/documents/events/$(eventId)).data.isActive == true &&
+                      isValidString(request.resource.data.guestName, 1, 100) &&
+                      isValidString(request.resource.data.message, 1, 2000);
+        
+        // Wishes cannot be updated or deleted by guests
+        // Only event owner can delete wishes
+        allow update: if false;
+        allow delete: if isEventOwner(eventId);
+      }
+      
+      // ==========================================
+      // PHOTOS SUBCOLLECTION
+      // ==========================================
+      
+      match /photos/{photoId} {
+        // Event owner can read all photos
+        // Public can read photos for gallery display
+        allow read: if isEventOwner(eventId) || 
+                     get(/databases/$(database)/documents/events/$(eventId)).data.isActive == true;
+        
+        // Anyone can create a photo record (public submission)
+        // But only if the event is active
+        allow create: if get(/databases/$(database)/documents/events/$(eventId)).data.isActive == true &&
+                      isValidString(request.resource.data.guestName, 1, 100) &&
+                      isValidString(request.resource.data.url, 10, 1000) &&
+                      isValidString(request.resource.data.storagePath, 10, 500);
+        
+        // Photos cannot be updated or deleted by guests
+        // Only event owner can delete photos
+        allow update: if false;
+        allow delete: if isEventOwner(eventId);
+      }
+    }
+    
+    // ==========================================
+    // DENY ALL OTHER ACCESS
+    // ==========================================
+    
+    // Deny access to any other documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

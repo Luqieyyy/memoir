@@ -1,0 +1,67 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ==========================================
+    // HELPER FUNCTIONS
+    // ==========================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Validate file size (max 15MB)
+    function isValidFileSize() {
+      return request.resource.size < 15 * 1024 * 1024;
+    }
+    
+    // Validate image content type
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // ==========================================
+    // EVENT PHOTOS
+    // ==========================================
+    
+    match /events/{eventId}/photos/{fileName} {
+      // Anyone can read photos (for public gallery)
+      allow read: if true;
+      
+      // Anyone can upload photos (public guest submission)
+      // Validation: must be an image, max 15MB
+      allow create: if isValidFileSize() && isValidImageType();
+      
+      // Only authenticated users can update/delete (event owners)
+      // Note: Additional ownership check should be done at application level
+      allow update, delete: if isAuthenticated();
+    }
+    
+    // ==========================================
+    // USER PROFILE IMAGES (Future use)
+    // ==========================================
+    
+    match /users/{userId}/profile/{fileName} {
+      // User can read their own profile images
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // User can upload/update their own profile image
+      allow create, update: if request.auth != null && 
+                               request.auth.uid == userId &&
+                               isValidFileSize() && 
+                               isValidImageType();
+      
+      // User can delete their own profile image
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ==========================================
+    // DENY ALL OTHER ACCESS
+    // ==========================================
+    
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
