@@ -35,9 +35,32 @@
     @apply bg-gradient-to-r from-primary-600 via-primary-500 to-dustyrose bg-clip-text text-transparent;
   }
 
+  /* Gold gradient text */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-500 via-gold-400 to-champagne bg-clip-text text-transparent;
+  }
+
   /* Decorative flower pattern */
   .wedding-pattern {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f5ddd3' fill-opacity='0.2'%3E%3Cpath d='M40 40c0-11.046-8.954-20-20-20S0 28.954 0 40s8.954 20 20 20 20-8.954 20-20zm40 0c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zM20 80c11.046 0 20-8.954 20-20S31.046 40 20 40 0 48.954 0 60s8.954 20 20 20zm40 0c11.046 0 20-8.954 20-20s-8.954-20-20-20-20 8.954-20 20 8.954 20 20 20z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Premium card styles */
+  .card-premium {
+    @apply bg-white rounded-2xl shadow-soft border border-champagne/30 hover:shadow-elegant transition-all duration-300;
+  }
+
+  /* Luxury button */
+  .btn-luxury {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-dustyrose text-white rounded-full font-semibold hover:shadow-elegant transition-all hover:scale-105;
+  }
+
+  /* Line clamp utilities */
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
