@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts';
-import { useEvent, useWishes, usePhotos } from '@/lib/hooks';
+import { useEvent, useWishes, usePhotos, useRSVP } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
-import { WishDisplay, PhotoGallery } from '@/components/wedding';
+import { WishDisplay, PhotoGallery, RSVPDashboard } from '@/components/wedding';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
 import {
@@ -25,17 +25,25 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'wishes' | 'photos';
+type TabType = 'qrcode' | 'rsvp' | 'wishes' | 'photos';
 
 export default function EventDetailPage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.eventId as string;
-  
+
   const { user } = useAuthContext();
   const { event, stats, loading, error, remove } = useEvent(eventId);
   const { wishes, loading: wishesLoading } = useWishes(eventId);
   const { photos, loading: photosLoading } = usePhotos(eventId);
+  const {
+    settings: rsvpSettings,
+    responses: rsvpResponses,
+    stats: rsvpStats,
+    updateSettings: rsvpUpdateSettings,
+    removeResponse: rsvpRemoveResponse,
+    settingsLoading: rsvpLoading
+  } = useRSVP(eventId);
 
   const [activeTab, setActiveTab] = useState<TabType>('qrcode');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -113,6 +121,7 @@ export default function EventDetailPage() {
 
   const tabs: { key: TabType; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: 'qrcode', label: 'QR Code', icon: <QrCode className="w-4 h-4" /> },
+    { key: 'rsvp', label: 'RSVP', icon: <Users className="w-4 h-4" />, count: rsvpStats?.total },
     { key: 'wishes', label: 'Wishes', icon: <MessageSquare className="w-4 h-4" />, count: stats?.totalWishes },
     { key: 'photos', label: 'Photos', icon: <Image className="w-4 h-4" />, count: stats?.totalPhotos },
   ];
@@ -170,13 +179,20 @@ export default function EventDetailPage() {
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-3 divide-x divide-secondary-100 border-t border-secondary-100">
+        <div className="grid grid-cols-4 divide-x divide-secondary-100 border-t border-secondary-100">
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
+              <Users className="w-4 h-4" />
+            </div>
+            <p className="text-xl font-semibold text-secondary-800">{rsvpStats?.attending || 0}</p>
+            <p className="text-xs text-secondary-500">Attending</p>
+          </div>
           <div className="p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
               <Users className="w-4 h-4" />
             </div>
             <p className="text-xl font-semibold text-secondary-800">{stats?.totalGuests || 0}</p>
-            <p className="text-xs text-secondary-500">Guests</p>
+            <p className="text-xs text-secondary-500">Guestbook</p>
           </div>
           <div className="p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
@@ -201,21 +217,19 @@ export default function EventDetailPage() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
-              activeTab === tab.key
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${activeTab === tab.key
                 ? 'bg-primary-600 text-white'
                 : 'bg-white text-secondary-600 hover:bg-secondary-50 border border-secondary-200'
-            }`}
+              }`}
           >
             {tab.icon}
             <span>{tab.label}</span>
             {tab.count !== undefined && tab.count > 0 && (
               <span
-                className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeTab === tab.key
+                className={`px-2 py-0.5 rounded-full text-xs ${activeTab === tab.key
                     ? 'bg-white/20 text-white'
                     : 'bg-secondary-100 text-secondary-600'
-                }`}
+                  }`}
               >
                 {tab.count}
               </span>
@@ -234,6 +248,29 @@ export default function EventDetailPage() {
               groomName={event.groomName}
               weddingId={event.weddingId}
             />
+          </div>
+        )}
+
+        {activeTab === 'rsvp' && (
+          <div>
+            {rsvpLoading ? (
+              <div className="flex justify-center p-12">
+                <Spinner />
+              </div>
+            ) : rsvpSettings ? (
+              <RSVPDashboard
+                settings={rsvpSettings}
+                responses={rsvpResponses}
+                stats={rsvpStats}
+                onUpdateSettings={rsvpUpdateSettings}
+                onDeleteResponse={rsvpRemoveResponse}
+              />
+            ) : (
+              <EmptyState
+                title="Error loading RSVP"
+                description="Could not load RSVP settings"
+              />
+            )}
           </div>
         )}
 

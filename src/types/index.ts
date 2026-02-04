@@ -184,3 +184,70 @@ export interface QRCodeDisplayProps {
   groomName: string;
   weddingId: string;
 }
+
+// ============================================
+// RSVP TYPES
+// ============================================
+
+export type RSVPStatus = 'attending' | 'not_attending' | 'maybe';
+
+export interface RSVPSettings {
+  id: string;
+  eventId: string;
+  isEnabled: boolean;
+  deadline?: Date;
+  maxGuestsPerRsvp: number;
+  totalCapacity?: number;
+  requirePhone: boolean;
+  showGuestCount: boolean;
+  customMessage?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface RSVPResponse {
+  id: string;
+  eventId: string;
+  guestName: string;
+  phoneNumber?: string;
+  status: RSVPStatus;
+  guestCount: number;
+  message?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface RSVPStats {
+  total: number;
+  attending: number;
+  notAttending: number;
+  maybe: number;
+  totalGuestCount: number;
+}
+
+export interface CreateRSVPInput {
+  guestName: string;
+  phoneNumber?: string;
+  status: RSVPStatus;
+  guestCount: number;
+  message?: string;
+}
+
+export interface UpdateRSVPSettingsInput {
+  isEnabled?: boolean;
+  deadline?: Date | null;
+  maxGuestsPerRsvp?: number;
+  totalCapacity?: number | null;
+  requirePhone?: boolean;
+  showGuestCount?: boolean;
+  customMessage?: string;
+}
+
+export interface RSVPFormData {
+  guestName: string;
+  phoneNumber: string;
+  status: RSVPStatus;
+  guestCount: number;
+  message: string;
+}
+

@@ -2,22 +2,23 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { usePublicEvent, useWishes, usePhotos } from '@/lib/hooks';
-import { WeddingHero, GuestSubmissionForm, WishDisplay, PhotoGallery } from '@/components/wedding';
+import { usePublicEvent, useWishes, usePhotos, useRSVP } from '@/lib/hooks';
+import { WeddingHero, GuestSubmissionForm, WishDisplay, PhotoGallery, RSVPForm } from '@/components/wedding';
 import { Spinner, Card, EmptyState } from '@/components/ui';
-import { Heart, MessageSquare, Image, ChevronDown } from 'lucide-react';
+import { Heart, MessageSquare, Image, ChevronDown, Calendar } from 'lucide-react';
 
-type SectionType = 'wishes' | 'photos' | 'share';
+type SectionType = 'rsvp' | 'wishes' | 'photos' | 'share';
 
 export default function WeddingPage() {
   const params = useParams();
   const weddingId = params.weddingId as string;
-  
+
   const { event, loading, error } = usePublicEvent(weddingId);
   const { wishes, loading: wishesLoading } = useWishes(event?.id || null);
   const { photos, loading: photosLoading } = usePhotos(event?.id || null);
+  const { settings, submitRSVP, settingsLoading } = useRSVP(event?.id || null);
 
-  const [activeSection, setActiveSection] = useState<SectionType>('share');
+  const [activeSection, setActiveSection] = useState<SectionType>('rsvp');
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Scroll to content section
@@ -55,9 +56,10 @@ export default function WeddingPage() {
   }
 
   const sections: { key: SectionType; label: string; icon: React.ReactNode }[] = [
-    { key: 'share', label: 'Share Memories', icon: <Heart className="w-4 h-4" /> },
+    { key: 'rsvp', label: 'RSVP', icon: <Calendar className="w-4 h-4" /> },
     { key: 'wishes', label: 'Wishes', icon: <MessageSquare className="w-4 h-4" /> },
     { key: 'photos', label: 'Gallery', icon: <Image className="w-4 h-4" /> },
+    { key: 'share', label: 'Share', icon: <Heart className="w-4 h-4" /> },
   ];
 
   return (
@@ -84,11 +86,10 @@ export default function WeddingPage() {
               <button
                 key={section.key}
                 onClick={() => setActiveSection(section.key)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${
-                  activeSection === section.key
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${activeSection === section.key
                     ? 'bg-primary-600 text-white shadow-soft'
                     : 'bg-white text-secondary-600 hover:bg-secondary-50 border border-secondary-200'
-                }`}
+                  }`}
               >
                 {section.icon}
                 <span>{section.label}</span>
@@ -98,11 +99,35 @@ export default function WeddingPage() {
 
           {/* Section Content */}
           <div className="animate-fade-in">
+            {activeSection === 'rsvp' && (
+              <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-6 sm:p-8">
+                {settingsLoading ? (
+                  <div className="flex justify-center py-12">
+                    <Spinner size="lg" />
+                  </div>
+                ) : settings ? (
+                  <RSVPForm
+                    eventId={event.id}
+                    settings={settings}
+                    brideName={event.brideName}
+                    groomName={event.groomName}
+                    onSubmit={async (data) => {
+                      await submitRSVP(data);
+                    }}
+                  />
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-secondary-500">RSVP settings not available.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {activeSection === 'share' && (
               <GuestSubmissionForm
                 eventId={event.id}
                 onSuccess={() => {
-                  // Optionally switch to gallery after successful submission
+                  setActiveSection('photos');
                 }}
               />
             )}

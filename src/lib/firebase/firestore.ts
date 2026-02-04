@@ -18,7 +18,7 @@ import {
   QueryConstraint,
 } from 'firebase/firestore';
 import { db } from './config';
-import { WeddingEvent, GuestEntry, WeddingWish, WeddingPhoto } from '@/types';
+import { WeddingEvent, GuestEntry, WeddingWish, WeddingPhoto, RSVPSettings, RSVPResponse, RSVPStats, RSVPStatus } from '@/types';
 import { generateWeddingId } from '@/lib/utils/helpers';
 
 // ============================================
@@ -43,9 +43,9 @@ export async function createEvent(
   const weddingId = generateWeddingId();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://memoir.app';
   const qrCodeUrl = `${appUrl}/wedding/${weddingId}`;
-  
+
   const eventRef = doc(collection(db, 'events'));
-  
+
   // Build event object without undefined values (Firestore doesn't accept undefined)
   const event: Record<string, any> = {
     id: eventRef.id,
@@ -61,14 +61,14 @@ export async function createEvent(
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
-  
+
   // Only add coverImage if it has a value
   if (eventData.coverImage) {
     event.coverImage = eventData.coverImage;
   }
-  
+
   await setDoc(eventRef, event);
-  
+
   return {
     id: event.id,
     weddingId: event.weddingId,
@@ -92,7 +92,7 @@ export async function createEvent(
 export async function getEventById(eventId: string): Promise<WeddingEvent | null> {
   const docRef = doc(db, 'events', eventId);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     const data = docSnap.data();
     return {
@@ -103,7 +103,7 @@ export async function getEventById(eventId: string): Promise<WeddingEvent | null
       updatedAt: data.updatedAt?.toDate() || new Date(),
     } as WeddingEvent;
   }
-  
+
   return null;
 }
 
@@ -113,7 +113,7 @@ export async function getEventById(eventId: string): Promise<WeddingEvent | null
 export async function getEventByWeddingId(weddingId: string): Promise<WeddingEvent | null> {
   const q = query(collection(db, 'events'), where('weddingId', '==', weddingId), limit(1));
   const querySnapshot = await getDocs(q);
-  
+
   if (!querySnapshot.empty) {
     const doc = querySnapshot.docs[0];
     const data = doc.data();
@@ -125,7 +125,7 @@ export async function getEventByWeddingId(weddingId: string): Promise<WeddingEve
       updatedAt: data.updatedAt?.toDate() || new Date(),
     } as WeddingEvent;
   }
-  
+
   return null;
 }
 
@@ -138,9 +138,9 @@ export async function getEventsByOwner(ownerId: string): Promise<WeddingEvent[]>
     where('ownerId', '==', ownerId),
     orderBy('createdAt', 'desc')
   );
-  
+
   const querySnapshot = await getDocs(q);
-  
+
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return {
@@ -183,7 +183,7 @@ export function subscribeToEvent(
   callback: (event: WeddingEvent | null) => void
 ): () => void {
   const eventRef = doc(db, 'events', eventId);
-  
+
   return onSnapshot(eventRef, (docSnap) => {
     if (docSnap.exists()) {
       const data = docSnap.data();
@@ -215,7 +215,7 @@ export async function addGuestEntry(
   }
 ): Promise<GuestEntry> {
   const guestRef = doc(collection(db, 'events', weddingId, 'guests'));
-  
+
   const guest: Omit<GuestEntry, 'createdAt'> & { createdAt: any } = {
     id: guestRef.id,
     weddingId,
@@ -223,9 +223,9 @@ export async function addGuestEntry(
     message: guestData.message || '',
     createdAt: serverTimestamp(),
   };
-  
+
   await setDoc(guestRef, guest);
-  
+
   return {
     ...guest,
     createdAt: new Date(),
@@ -239,14 +239,14 @@ export async function getGuestsByWeddingId(weddingId: string): Promise<GuestEntr
   // First get the event by weddingId to get the event ID
   const event = await getEventByWeddingId(weddingId);
   if (!event) return [];
-  
+
   const q = query(
     collection(db, 'events', event.id, 'guests'),
     orderBy('createdAt', 'desc')
   );
-  
+
   const querySnapshot = await getDocs(q);
-  
+
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return {
@@ -268,7 +268,7 @@ export function subscribeToGuests(
     collection(db, 'events', eventId, 'guests'),
     orderBy('createdAt', 'desc')
   );
-  
+
   return onSnapshot(q, (querySnapshot) => {
     const guests = querySnapshot.docs.map((doc) => {
       const data = doc.data();
@@ -297,7 +297,7 @@ export async function addWish(
   }
 ): Promise<WeddingWish> {
   const wishRef = doc(collection(db, 'events', eventId, 'wishes'));
-  
+
   const wish: Omit<WeddingWish, 'createdAt'> & { createdAt: any } = {
     id: wishRef.id,
     eventId,
@@ -305,9 +305,9 @@ export async function addWish(
     message: wishData.message,
     createdAt: serverTimestamp(),
   };
-  
+
   await setDoc(wishRef, wish);
-  
+
   return {
     ...wish,
     createdAt: new Date(),
@@ -322,9 +322,9 @@ export async function getWishesByEventId(eventId: string): Promise<WeddingWish[]
     collection(db, 'events', eventId, 'wishes'),
     orderBy('createdAt', 'desc')
   );
-  
+
   const querySnapshot = await getDocs(q);
-  
+
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return {
@@ -346,7 +346,7 @@ export function subscribeToWishes(
     collection(db, 'events', eventId, 'wishes'),
     orderBy('createdAt', 'desc')
   );
-  
+
   return onSnapshot(q, (querySnapshot) => {
     const wishes = querySnapshot.docs.map((doc) => {
       const data = doc.data();
@@ -379,7 +379,7 @@ export async function addPhotoRecord(
   }
 ): Promise<WeddingPhoto> {
   const photoRef = doc(collection(db, 'events', eventId, 'photos'));
-  
+
   const photo: Omit<WeddingPhoto, 'createdAt'> & { createdAt: any } = {
     id: photoRef.id,
     eventId,
@@ -391,9 +391,9 @@ export async function addPhotoRecord(
     mimeType: photoData.mimeType,
     createdAt: serverTimestamp(),
   };
-  
+
   await setDoc(photoRef, photo);
-  
+
   return {
     ...photo,
     createdAt: new Date(),
@@ -408,9 +408,9 @@ export async function getPhotosByEventId(eventId: string): Promise<WeddingPhoto[
     collection(db, 'events', eventId, 'photos'),
     orderBy('createdAt', 'desc')
   );
-  
+
   const querySnapshot = await getDocs(q);
-  
+
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return {
@@ -432,7 +432,7 @@ export function subscribeToPhotos(
     collection(db, 'events', eventId, 'photos'),
     orderBy('createdAt', 'desc')
   );
-  
+
   return onSnapshot(q, (querySnapshot) => {
     const photos = querySnapshot.docs.map((doc) => {
       const data = doc.data();
@@ -459,10 +459,198 @@ export async function getEventStats(eventId: string): Promise<{
     getDocs(collection(db, 'events', eventId, 'wishes')),
     getDocs(collection(db, 'events', eventId, 'photos')),
   ]);
-  
+
   return {
     totalGuests: guestsSnap.size,
     totalWishes: wishesSnap.size,
     totalPhotos: photosSnap.size,
   };
 }
+
+// ============================================
+// RSVP SETTINGS OPERATIONS
+// ============================================
+
+/**
+ * Get or create RSVP settings for an event
+ */
+export async function getRSVPSettings(eventId: string): Promise<RSVPSettings> {
+  const settingsRef = doc(db, 'events', eventId, 'rsvpSettings', 'settings');
+  const docSnap = await getDoc(settingsRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    return {
+      ...data,
+      id: docSnap.id,
+      eventId,
+      deadline: data.deadline?.toDate() || undefined,
+      createdAt: data.createdAt?.toDate() || new Date(),
+      updatedAt: data.updatedAt?.toDate() || new Date(),
+    } as RSVPSettings;
+  }
+
+  // Create default settings if not exists
+  const defaultSettings: Omit<RSVPSettings, 'createdAt' | 'updatedAt'> & { createdAt: any; updatedAt: any } = {
+    id: 'settings',
+    eventId,
+    isEnabled: true,
+    maxGuestsPerRsvp: 5,
+    requirePhone: false,
+    showGuestCount: true,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  await setDoc(settingsRef, defaultSettings);
+
+  return {
+    ...defaultSettings,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
+/**
+ * Update RSVP settings
+ */
+export async function updateRSVPSettings(
+  eventId: string,
+  updates: Partial<Omit<RSVPSettings, 'id' | 'eventId' | 'createdAt'>>
+): Promise<void> {
+  const settingsRef = doc(db, 'events', eventId, 'rsvpSettings', 'settings');
+  await updateDoc(settingsRef, {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// ============================================
+// RSVP RESPONSE OPERATIONS
+// ============================================
+
+/**
+ * Add an RSVP response
+ */
+export async function addRSVPResponse(
+  eventId: string,
+  responseData: {
+    guestName: string;
+    phoneNumber?: string;
+    status: RSVPStatus;
+    guestCount: number;
+    message?: string;
+  }
+): Promise<RSVPResponse> {
+  const responseRef = doc(collection(db, 'events', eventId, 'rsvpResponses'));
+
+  const response: Omit<RSVPResponse, 'createdAt' | 'updatedAt'> & { createdAt: any; updatedAt: any } = {
+    id: responseRef.id,
+    eventId,
+    guestName: responseData.guestName,
+    phoneNumber: responseData.phoneNumber || '',
+    status: responseData.status,
+    guestCount: responseData.guestCount,
+    message: responseData.message || '',
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  await setDoc(responseRef, response);
+
+  return {
+    ...response,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
+/**
+ * Get all RSVP responses for an event
+ */
+export async function getRSVPResponses(eventId: string): Promise<RSVPResponse[]> {
+  const q = query(
+    collection(db, 'events', eventId, 'rsvpResponses'),
+    orderBy('createdAt', 'desc')
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      id: doc.id,
+      createdAt: data.createdAt?.toDate() || new Date(),
+      updatedAt: data.updatedAt?.toDate() || new Date(),
+    } as RSVPResponse;
+  });
+}
+
+/**
+ * Subscribe to RSVP responses (real-time)
+ */
+export function subscribeToRSVPResponses(
+  eventId: string,
+  callback: (responses: RSVPResponse[]) => void
+): () => void {
+  const q = query(
+    collection(db, 'events', eventId, 'rsvpResponses'),
+    orderBy('createdAt', 'desc')
+  );
+
+  return onSnapshot(q, (querySnapshot) => {
+    const responses = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+      } as RSVPResponse;
+    });
+    callback(responses);
+  });
+}
+
+/**
+ * Get RSVP statistics
+ */
+export async function getRSVPStats(eventId: string): Promise<RSVPStats> {
+  const responses = await getRSVPResponses(eventId);
+
+  const stats: RSVPStats = {
+    total: responses.length,
+    attending: 0,
+    notAttending: 0,
+    maybe: 0,
+    totalGuestCount: 0,
+  };
+
+  responses.forEach((response) => {
+    switch (response.status) {
+      case 'attending':
+        stats.attending++;
+        stats.totalGuestCount += response.guestCount;
+        break;
+      case 'not_attending':
+        stats.notAttending++;
+        break;
+      case 'maybe':
+        stats.maybe++;
+        stats.totalGuestCount += response.guestCount; // Count maybe guests too
+        break;
+    }
+  });
+
+  return stats;
+}
+
+/**
+ * Delete an RSVP response
+ */
+export async function deleteRSVPResponse(eventId: string, responseId: string): Promise<void> {
+  const responseRef = doc(db, 'events', eventId, 'rsvpResponses', responseId);
+  await deleteDoc(responseRef);
+}
+
