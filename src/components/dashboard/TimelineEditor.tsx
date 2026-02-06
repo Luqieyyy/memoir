@@ -116,14 +116,18 @@ export const TimelineEditor: React.FC<TimelineEditorProps> = ({
                                     onChange={(e) => handleChange(event.id, 'title', e.target.value)}
                                     className="font-medium"
                                 />
-                                <div className="md:col-span-2">
-                                    <Input
-                                        placeholder="Deskripsi (Optional)"
-                                        value={event.description || ''}
-                                        onChange={(e) => handleChange(event.id, 'description', e.target.value)}
-                                        className="text-sm text-secondary-500"
-                                    />
-                                </div>
+                                <Input
+                                    placeholder="Lokasi (cth: Dewan Utama)"
+                                    value={event.location || ''}
+                                    onChange={(e) => handleChange(event.id, 'location', e.target.value)}
+                                    className="text-sm"
+                                />
+                                <Input
+                                    placeholder="Deskripsi (Optional)"
+                                    value={event.description || ''}
+                                    onChange={(e) => handleChange(event.id, 'description', e.target.value)}
+                                    className="text-sm text-secondary-500"
+                                />
                             </div>
 
                             {/* Delete Button */}

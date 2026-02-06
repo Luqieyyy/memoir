@@ -7,10 +7,10 @@ import { useAuthContext } from '@/contexts';
 import { useEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
 import { RSVPDashboard, MemoryWall, DEFAULT_WEDDING_TIMELINE } from '@/components/wedding';
-import { AppearanceEditor, TimelineEditor } from '@/components/dashboard';
+import { AppearanceEditor, TimelineEditor, MusicSettings } from '@/components/dashboard';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
-import { TimelineEvent } from '@/types';
+import { TimelineEvent, BackgroundMusic } from '@/types';
 import {
   ArrowLeft,
   Calendar,
@@ -29,7 +29,16 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'rsvp' | 'timeline' | 'memories' | 'appearance';
+type TabType = 'qrcode' | 'rsvp' | 'timeline' | 'memories' | 'music' | 'appearance';
+
+// Custom Music Icon
+const MusicIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="M9 18V5l12-2v13" />
+    <circle cx="6" cy="18" r="3" fill="currentColor" />
+    <circle cx="18" cy="16" r="3" fill="currentColor" />
+  </svg>
+);
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -144,8 +153,17 @@ export default function EventDetailPage() {
     { key: 'rsvp', label: 'RSVP', icon: <Users className="w-4 h-4" />, count: rsvpStats?.total },
     { key: 'timeline', label: 'Aturcara', icon: <Clock className="w-4 h-4" /> },
     { key: 'memories', label: 'Kenangan', icon: <Heart className="w-4 h-4" />, count: (stats?.totalWishes || 0) + (stats?.totalPhotos || 0) },
+    { key: 'music', label: 'Muzik', icon: <MusicIcon /> },
     { key: 'appearance', label: 'Reka Bentuk', icon: <Sparkles className="w-4 h-4" /> },
   ];
+
+  const handleUpdateMusic = async (musicSettings: BackgroundMusic) => {
+    try {
+      await update({ backgroundMusic: musicSettings });
+    } catch (err) {
+      throw err;
+    }
+  };
 
   return (
     <div className="p-6 lg:p-8">
@@ -348,6 +366,15 @@ export default function EventDetailPage() {
               photos={photos}
               wishesLoading={wishesLoading}
               photosLoading={photosLoading}
+            />
+          </div>
+        )}
+
+        {activeTab === 'music' && (
+          <div className="max-w-2xl mx-auto">
+            <MusicSettings
+              initialSettings={event.backgroundMusic}
+              onSave={handleUpdateMusic}
             />
           </div>
         )}

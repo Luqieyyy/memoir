@@ -28,6 +28,7 @@ export interface WeddingEvent {
   coverImage?: string;
   isActive: boolean;
   timeline?: TimelineEvent[];
+  backgroundMusic?: BackgroundMusic;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +40,14 @@ export interface TimelineEvent {
   description?: string;
   location?: string;
   icon: string;
+}
+
+export interface BackgroundMusic {
+  youtubeUrl: string;
+  startTime: number; // in seconds
+  endTime: number; // in seconds
+  enabled: boolean;
+  volume: number; // 0-100
 }
 
 export interface CreateEventInput {
@@ -59,6 +68,7 @@ export interface UpdateEventInput {
   welcomeMessage?: string;
   isActive?: boolean;
   timeline?: TimelineEvent[];
+  backgroundMusic?: BackgroundMusic;
 }
 
 // ============================================

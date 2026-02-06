@@ -6,7 +6,7 @@ import { usePublicEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/h
 import { WeddingHero, GuestSubmissionForm, RSVPForm, ThemeProvider, MemoryWall, WeddingTimeline, DEFAULT_WEDDING_TIMELINE, ShareCard } from '@/components/wedding';
 import { Spinner, Card } from '@/components/ui';
 import { Heart, Image, ChevronDown, Calendar, Clock } from 'lucide-react';
-import { FloatingPetals, CountdownTimer, MusicPlayer, Confetti } from '@/components/effects';
+import { FloatingPetals, CountdownTimer, MusicPlayer, Confetti, YouTubeMusicPlayer } from '@/components/effects';
 
 type SectionType = 'rsvp' | 'memories' | 'share' | 'timeline';
 
@@ -98,8 +98,12 @@ export default function WeddingPage() {
         {/* Confetti Celebration */}
         <Confetti active={showConfetti} duration={4000} particleCount={60} />
 
-        {/* Music Player */}
-        <MusicPlayer variant="floating" autoPlay={false} />
+        {/* Music Player - Use YouTube if configured, else fallback */}
+        {event.backgroundMusic?.enabled ? (
+          <YouTubeMusicPlayer music={event.backgroundMusic} variant="floating" />
+        ) : (
+          <MusicPlayer variant="floating" autoPlay={false} />
+        )}
 
         {/* Hero Section */}
         <WeddingHero event={event} />
@@ -222,7 +226,7 @@ export default function WeddingPage() {
                       Tentative program hari bahagia kami
                     </p>
                   </div>
-                  <WeddingTimeline events={DEFAULT_WEDDING_TIMELINE} variant="vertical" />
+                  <WeddingTimeline events={event.timeline || DEFAULT_WEDDING_TIMELINE} variant="vertical" />
                 </div>
               )}
 
