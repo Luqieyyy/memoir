@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { usePublicEvent, useWishes, usePhotos, useRSVP } from '@/lib/hooks';
-import { WeddingHero, GuestSubmissionForm, WishDisplay, PhotoGallery, RSVPForm } from '@/components/wedding';
+import { usePublicEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
+import { WeddingHero, GuestSubmissionForm, WishDisplay, PhotoGallery, RSVPForm, ThemeProvider } from '@/components/wedding';
 import { Spinner, Card, EmptyState } from '@/components/ui';
 import { Heart, MessageSquare, Image, ChevronDown, Calendar } from 'lucide-react';
 
@@ -17,6 +17,7 @@ export default function WeddingPage() {
   const { wishes, loading: wishesLoading } = useWishes(event?.id || null);
   const { photos, loading: photosLoading } = usePhotos(event?.id || null);
   const { settings, submitRSVP, settingsLoading } = useRSVP(event?.id || null);
+  const { theme, loading: themeLoading } = useTheme(event?.id || null);
 
   const [activeSection, setActiveSection] = useState<SectionType>('rsvp');
   const contentRef = useRef<HTMLDivElement>(null);
@@ -62,116 +63,147 @@ export default function WeddingPage() {
     { key: 'share', label: 'Share', icon: <Heart className="w-4 h-4" /> },
   ];
 
+  // Check if initial theme loading
+  if (themeLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-cream">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  // Use theme if available, otherwise use default styles implicitly via CSS classes
+  const styles = theme ? {} : {
+    backgroundColor: '#FFFBF7', // Cream fallback
+  };
+
+  const sectionsList = sections.filter(section =>
+    !theme || theme.sections[section.key as keyof typeof theme.sections]
+  );
+
+  // If theme has order, we could reorder sectionsList here, 
+  // currently just using fixed order but filtered visibility
+
+  const Wrapper = ({ children }: { children: React.ReactNode }) =>
+    theme ? <ThemeProvider theme={theme}>{children}</ThemeProvider> : <>{children}</>;
+
   return (
-    <div className="min-h-screen bg-cream">
-      {/* Hero Section */}
-      <WeddingHero event={event} />
+    <Wrapper>
+      <div className="min-h-screen transition-colors duration-500" style={styles}>
+        {/* Hero Section */}
+        <WeddingHero event={event} />
 
-      {/* Scroll Indicator */}
-      <div className="flex justify-center -mt-8 relative z-10">
-        <button
-          onClick={scrollToContent}
-          className="w-12 h-12 bg-white rounded-full shadow-elegant flex items-center justify-center animate-bounce hover:scale-110 transition-transform"
-        >
-          <ChevronDown className="w-6 h-6 text-primary-600" />
-        </button>
-      </div>
+        {/* Scroll Indicator */}
+        <div className="flex justify-center -mt-8 relative z-10">
+          <button
+            onClick={scrollToContent}
+            className="w-12 h-12 bg-white rounded-full shadow-elegant flex items-center justify-center animate-bounce hover:scale-110 transition-transform text-primary-600"
+            style={theme ? { color: theme.colors.primary } : {}}
+          >
+            <ChevronDown className="w-6 h-6" />
+          </button>
+        </div>
 
-      {/* Main Content */}
-      <div ref={contentRef} className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          {/* Section Tabs */}
-          <div className="flex gap-2 justify-center mb-8 flex-wrap">
-            {sections.map((section) => (
-              <button
-                key={section.key}
-                onClick={() => setActiveSection(section.key)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${activeSection === section.key
-                    ? 'bg-primary-600 text-white shadow-soft'
+        {/* Main Content */}
+        <div ref={contentRef} className="py-12 px-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Section Tabs */}
+            <div className="flex gap-2 justify-center mb-8 flex-wrap">
+              {sectionsList.map((section) => (
+                <button
+                  key={section.key}
+                  onClick={() => setActiveSection(section.key)}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${activeSection === section.key
+                    ? 'theme-bg-primary text-white shadow-soft'
                     : 'bg-white text-secondary-600 hover:bg-secondary-50 border border-secondary-200'
-                  }`}
-              >
-                {section.icon}
-                <span>{section.label}</span>
-              </button>
-            ))}
-          </div>
+                    }`}
 
-          {/* Section Content */}
-          <div className="animate-fade-in">
-            {activeSection === 'rsvp' && (
-              <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-6 sm:p-8">
-                {settingsLoading ? (
-                  <div className="flex justify-center py-12">
-                    <Spinner size="lg" />
-                  </div>
-                ) : settings ? (
-                  <RSVPForm
-                    eventId={event.id}
-                    settings={settings}
-                    brideName={event.brideName}
-                    groomName={event.groomName}
-                    onSubmit={async (data) => {
-                      await submitRSVP(data);
-                    }}
-                  />
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-secondary-500">RSVP settings not available.</p>
-                  </div>
-                )}
-              </div>
-            )}
+                  style={activeSection === section.key && theme ? {
+                    backgroundColor: theme.colors.primary,
+                  } : {}}
+                >
+                  {section.icon}
+                  <span>{section.label}</span>
+                </button>
+              ))}
+            </div>
 
-            {activeSection === 'share' && (
-              <GuestSubmissionForm
-                eventId={event.id}
-                onSuccess={() => {
-                  setActiveSection('photos');
-                }}
-              />
-            )}
-
-            {activeSection === 'wishes' && (
-              <div>
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                    Heartfelt Wishes
-                  </h2>
-                  <p className="text-secondary-500">
-                    Messages from friends and family
-                  </p>
+            {/* Section Content */}
+            <div className="animate-fade-in">
+              {activeSection === 'rsvp' && (
+                <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-6 sm:p-8">
+                  {settingsLoading ? (
+                    <div className="flex justify-center py-12">
+                      <Spinner size="lg" />
+                    </div>
+                  ) : settings ? (
+                    <RSVPForm
+                      eventId={event.id}
+                      settings={settings}
+                      brideName={event.brideName}
+                      groomName={event.groomName}
+                      onSubmit={async (data) => {
+                        await submitRSVP(data);
+                      }}
+                    />
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-secondary-500">RSVP settings not available.</p>
+                    </div>
+                  )}
                 </div>
-                <WishDisplay wishes={wishes} loading={wishesLoading} />
-              </div>
-            )}
+              )}
 
-            {activeSection === 'photos' && (
-              <div>
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                    Memory Gallery
-                  </h2>
-                  <p className="text-secondary-500">
-                    Captured moments from the celebration
-                  </p>
+              {activeSection === 'share' && (
+                <GuestSubmissionForm
+                  eventId={event.id}
+                  onSuccess={() => {
+                    setActiveSection('photos');
+                  }}
+                />
+              )}
+
+              {activeSection === 'wishes' && (
+                <div>
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
+                      Heartfelt Wishes
+                    </h2>
+                    <p className="text-secondary-500">
+                      Messages from friends and family
+                    </p>
+                  </div>
+                  <WishDisplay wishes={wishes} loading={wishesLoading} />
                 </div>
-                <PhotoGallery photos={photos} loading={photosLoading} />
-              </div>
-            )}
+              )}
+
+              {activeSection === 'photos' && (
+                <div>
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
+                      Memory Gallery
+                    </h2>
+                    <p className="text-secondary-500">
+                      Captured moments from the celebration
+                    </p>
+                  </div>
+                  <PhotoGallery photos={photos} loading={photosLoading} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="py-8 text-center border-t border-primary-100 bg-white/50">
+          <div className="flex items-center justify-center gap-2 text-secondary-500">
+            <span className="text-sm">Made with</span>
+            <Heart className="w-4 h-4 text-primary-500 fill-primary-500" />
+            <span className="text-sm">by</span>
+            <span className="font-display font-semibold text-primary-600">Memoir</span>
+          </div>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="py-8 text-center border-t border-primary-100 bg-white/50">
-        <div className="flex items-center justify-center gap-2 text-secondary-500">
-          <span className="text-sm">Made with</span>
-          <Heart className="w-4 h-4 text-primary-500 fill-primary-500" />
-          <span className="text-sm">by</span>
-          <span className="font-display font-semibold text-primary-600">Memoir</span>
-        </div>
-      </footer>
-    </div>
+    </Wrapper >
   );
 }

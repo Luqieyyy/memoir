@@ -251,3 +251,68 @@ export interface RSVPFormData {
   message: string;
 }
 
+// ============================================
+// THEME SYSTEM TYPES
+// ============================================
+
+export type TemplateId = 'modern-minimal' | 'malay-songket' | 'floral-romance' | 'islamic-geometric';
+
+export interface ColorPalette {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+}
+
+export interface FontSettings {
+  heading: string;
+  body: string;
+}
+
+export interface HeroSettings {
+  layout: 'centered' | 'left-aligned' | 'split';
+  showCountdown: boolean;
+  overlayOpacity: number;
+  backgroundImage?: string;
+}
+
+export interface SectionVisibility {
+  rsvp: boolean;
+  wishes: boolean;
+  photos: boolean;
+  share: boolean;
+}
+
+export interface ThemeConfig {
+  templateId: TemplateId;
+  colors: ColorPalette;
+  fonts: FontSettings;
+  hero: HeroSettings;
+  sections: SectionVisibility;
+  sectionOrder: string[];
+  customCSS?: string;
+}
+
+export interface TemplatePreset {
+  id: TemplateId;
+  name: string;
+  nameMs: string;
+  description: string;
+  descriptionMs: string;
+  thumbnail: string;
+  colors: ColorPalette;
+  fonts: FontSettings;
+  hero: Partial<HeroSettings>;
+}
+
+export interface UpdateThemeInput {
+  templateId?: TemplateId;
+  colors?: Partial<ColorPalette>;
+  fonts?: Partial<FontSettings>;
+  hero?: Partial<HeroSettings>;
+  sections?: Partial<SectionVisibility>;
+  sectionOrder?: string[];
+  customCSS?: string;
+}
+

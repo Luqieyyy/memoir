@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts';
-import { useEvent, useWishes, usePhotos, useRSVP } from '@/lib/hooks';
+import { useEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
 import { WishDisplay, PhotoGallery, RSVPDashboard } from '@/components/wedding';
+import { AppearanceEditor } from '@/components/dashboard';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
 import {
@@ -22,10 +23,11 @@ import {
   ExternalLink,
   Download,
   MessageSquare,
+  Sparkles,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'rsvp' | 'wishes' | 'photos';
+type TabType = 'qrcode' | 'rsvp' | 'wishes' | 'photos' | 'appearance';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -44,6 +46,7 @@ export default function EventDetailPage() {
     removeResponse: rsvpRemoveResponse,
     settingsLoading: rsvpLoading
   } = useRSVP(eventId);
+  const { theme, loading: themeLoading, updateTheme, applyTemplate, presets } = useTheme(eventId);
 
   const [activeTab, setActiveTab] = useState<TabType>('qrcode');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -124,6 +127,7 @@ export default function EventDetailPage() {
     { key: 'rsvp', label: 'RSVP', icon: <Users className="w-4 h-4" />, count: rsvpStats?.total },
     { key: 'wishes', label: 'Wishes', icon: <MessageSquare className="w-4 h-4" />, count: stats?.totalWishes },
     { key: 'photos', label: 'Photos', icon: <Image className="w-4 h-4" />, count: stats?.totalPhotos },
+    { key: 'appearance', label: 'Reka Bentuk', icon: <Sparkles className="w-4 h-4" /> },
   ];
 
   return (
@@ -218,8 +222,8 @@ export default function EventDetailPage() {
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${activeTab === tab.key
-                ? 'bg-primary-600 text-white'
-                : 'bg-white text-secondary-600 hover:bg-secondary-50 border border-secondary-200'
+              ? 'bg-primary-600 text-white'
+              : 'bg-white text-secondary-600 hover:bg-secondary-50 border border-secondary-200'
               }`}
           >
             {tab.icon}
@@ -227,8 +231,8 @@ export default function EventDetailPage() {
             {tab.count !== undefined && tab.count > 0 && (
               <span
                 className={`px-2 py-0.5 rounded-full text-xs ${activeTab === tab.key
-                    ? 'bg-white/20 text-white'
-                    : 'bg-secondary-100 text-secondary-600'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-secondary-100 text-secondary-600'
                   }`}
               >
                 {tab.count}
@@ -283,6 +287,30 @@ export default function EventDetailPage() {
         {activeTab === 'photos' && (
           <div>
             <PhotoGallery photos={photos} loading={photosLoading} />
+          </div>
+        )}
+
+        {activeTab === 'appearance' && (
+          <div>
+            {themeLoading ? (
+              <div className="flex justify-center p-12">
+                <Spinner />
+              </div>
+            ) : theme ? (
+              <AppearanceEditor
+                theme={theme}
+                presets={presets}
+                onUpdateTheme={updateTheme}
+                onApplyTemplate={applyTemplate}
+                loading={themeLoading}
+                previewUrl={`/wedding/${event.weddingId}`}
+              />
+            ) : (
+              <EmptyState
+                title="Error loading theme"
+                description="Could not load appearance settings"
+              />
+            )}
           </div>
         )}
       </div>

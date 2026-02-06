@@ -4,3 +4,5 @@ export { WishDisplay } from './WishDisplay';
 export { PhotoGallery } from './PhotoGallery';
 export { RSVPForm } from './RSVPForm';
 export { RSVPDashboard } from './RSVPDashboard';
+export { ThemeProvider } from './ThemeProvider';
+export { MemoryWall } from './MemoryWall';

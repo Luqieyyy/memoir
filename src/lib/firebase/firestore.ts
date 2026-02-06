@@ -18,7 +18,7 @@ import {
   QueryConstraint,
 } from 'firebase/firestore';
 import { db } from './config';
-import { WeddingEvent, GuestEntry, WeddingWish, WeddingPhoto, RSVPSettings, RSVPResponse, RSVPStats, RSVPStatus } from '@/types';
+import { WeddingEvent, GuestEntry, WeddingWish, WeddingPhoto, RSVPSettings, RSVPResponse, RSVPStats, RSVPStatus, ThemeConfig, UpdateThemeInput } from '@/types';
 import { generateWeddingId } from '@/lib/utils/helpers';
 
 // ============================================
@@ -652,5 +652,103 @@ export async function getRSVPStats(eventId: string): Promise<RSVPStats> {
 export async function deleteRSVPResponse(eventId: string, responseId: string): Promise<void> {
   const responseRef = doc(db, 'events', eventId, 'rsvpResponses', responseId);
   await deleteDoc(responseRef);
+}
+
+// ============================================
+// THEME OPERATIONS
+// ============================================
+
+const DEFAULT_THEME: ThemeConfig = {
+  templateId: 'modern-minimal',
+  colors: {
+    primary: '#D4A5A5',
+    secondary: '#4A5568',
+    accent: '#E8BCB9',
+    background: '#FFFBF7',
+    text: '#2D3748',
+  },
+  fonts: {
+    heading: 'Playfair Display',
+    body: 'Inter',
+  },
+  hero: {
+    layout: 'centered',
+    showCountdown: true,
+    overlayOpacity: 0.1,
+  },
+  sections: {
+    rsvp: true,
+    wishes: true,
+    photos: true,
+    share: true,
+  },
+  sectionOrder: ['rsvp', 'wishes', 'photos', 'share'],
+};
+
+/**
+ * Get theme configuration for an event
+ */
+export async function getThemeConfig(eventId: string): Promise<ThemeConfig> {
+  const themeRef = doc(db, 'events', eventId, 'theme', 'config');
+  const themeDoc = await getDoc(themeRef);
+
+  if (themeDoc.exists()) {
+    return themeDoc.data() as ThemeConfig;
+  }
+
+  // Create default theme if not exists
+  await setDoc(themeRef, DEFAULT_THEME);
+  return DEFAULT_THEME;
+}
+
+/**
+ * Update theme configuration
+ */
+export async function updateThemeConfig(
+  eventId: string,
+  updates: UpdateThemeInput
+): Promise<ThemeConfig> {
+  const themeRef = doc(db, 'events', eventId, 'theme', 'config');
+  const currentTheme = await getThemeConfig(eventId);
+
+  const updatedTheme: ThemeConfig = {
+    ...currentTheme,
+    ...updates,
+    colors: updates.colors
+      ? { ...currentTheme.colors, ...updates.colors }
+      : currentTheme.colors,
+    fonts: updates.fonts
+      ? { ...currentTheme.fonts, ...updates.fonts }
+      : currentTheme.fonts,
+    hero: updates.hero
+      ? { ...currentTheme.hero, ...updates.hero }
+      : currentTheme.hero,
+    sections: updates.sections
+      ? { ...currentTheme.sections, ...updates.sections }
+      : currentTheme.sections,
+  };
+
+  await setDoc(themeRef, updatedTheme);
+  return updatedTheme;
+}
+
+/**
+ * Subscribe to theme changes (real-time)
+ */
+export function subscribeToTheme(
+  eventId: string,
+  callback: (theme: ThemeConfig) => void
+): () => void {
+  const themeRef = doc(db, 'events', eventId, 'theme', 'config');
+
+  return onSnapshot(themeRef, async (snapshot) => {
+    if (snapshot.exists()) {
+      callback(snapshot.data() as ThemeConfig);
+    } else {
+      // Initialize default theme
+      const defaultTheme = await getThemeConfig(eventId);
+      callback(defaultTheme);
+    }
+  });
 }
 
