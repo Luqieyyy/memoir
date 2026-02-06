@@ -8,5 +8,7 @@ export { ThemeProvider } from './ThemeProvider';
 export { MemoryWall } from './MemoryWall';
 export { WeddingTimeline, DEFAULT_WEDDING_TIMELINE } from './WeddingTimeline';
 export { ShareCard } from './ShareCard';
+export { AIWishGenerator } from './AIWishGenerator';
+
 
 

@@ -6,19 +6,24 @@ import { useWishes, usePhotos } from '@/lib/hooks';
 import { validateImageFile, createImagePreview, revokeImagePreview } from '@/lib/utils';
 import { User, MessageSquare, Camera, X, Send, Upload, Image as ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { AIWishGenerator } from './AIWishGenerator';
 
 interface GuestSubmissionFormProps {
   eventId: string;
   onSuccess?: () => void;
+  brideName?: string;
+  groomName?: string;
 }
 
 export const GuestSubmissionForm: React.FC<GuestSubmissionFormProps> = ({
   eventId,
   onSuccess,
+  brideName = 'Pengantin',
+  groomName = 'Pengantin',
 }) => {
   const { addWish, adding: addingWish } = useWishes(eventId);
   const { uploadPhotos, uploading, uploadProgress } = usePhotos(eventId);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -31,6 +36,11 @@ export const GuestSubmissionForm: React.FC<GuestSubmissionFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
+  // AI Wish Generator Handler
+  const handleAIWishSelect = (wish: string) => {
+    setFormData((prev) => ({ ...prev, message: wish }));
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -41,7 +51,7 @@ export const GuestSubmissionForm: React.FC<GuestSubmissionFormProps> = ({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+
     // Validate each file
     const validFiles: File[] = [];
     const newPreviews: string[] = [];
@@ -179,24 +189,31 @@ export const GuestSubmissionForm: React.FC<GuestSubmissionFormProps> = ({
           disabled={isSubmitting}
         />
 
-        {/* Message */}
-        <Textarea
-          label="Your Message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          error={errors.message}
-          placeholder="Write your wishes for the happy couple..."
-          rows={4}
-          disabled={isSubmitting}
-        />
+        {/* Message with AI Generator */}
+        <div className="space-y-2">
+          <AIWishGenerator
+            onSelect={handleAIWishSelect}
+            brideName={brideName}
+            groomName={groomName}
+          />
+          <Textarea
+            label="Your Message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            error={errors.message}
+            placeholder="Write your wishes for the happy couple..."
+            rows={4}
+            disabled={isSubmitting}
+          />
+        </div>
 
         {/* Photo Upload */}
         <div>
           <label className="block text-sm font-medium text-secondary-700 mb-2">
             Share Photos (Optional)
           </label>
-          
+
           <input
             ref={fileInputRef}
             type="file"

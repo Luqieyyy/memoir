@@ -6,10 +6,11 @@ import Link from 'next/link';
 import { useAuthContext } from '@/contexts';
 import { useEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
-import { RSVPDashboard, MemoryWall } from '@/components/wedding';
-import { AppearanceEditor } from '@/components/dashboard';
+import { RSVPDashboard, MemoryWall, DEFAULT_WEDDING_TIMELINE } from '@/components/wedding';
+import { AppearanceEditor, TimelineEditor } from '@/components/dashboard';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
+import { TimelineEvent } from '@/types';
 import {
   ArrowLeft,
   Calendar,
@@ -23,10 +24,12 @@ import {
   Download,
   Sparkles,
   Camera,
+  Copy,
+  Clock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'rsvp' | 'memories' | 'appearance';
+type TabType = 'qrcode' | 'rsvp' | 'timeline' | 'memories' | 'appearance';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -34,7 +37,7 @@ export default function EventDetailPage() {
   const eventId = params.eventId as string;
 
   const { user } = useAuthContext();
-  const { event, stats, loading, error, remove } = useEvent(eventId);
+  const { event, stats, loading, error, remove, update } = useEvent(eventId);
   const { wishes, loading: wishesLoading } = useWishes(eventId);
   const { photos, loading: photosLoading } = usePhotos(eventId);
   const {
@@ -72,6 +75,21 @@ export default function EventDetailPage() {
       setShowDeleteModal(false);
     }
   };
+
+  const handleUpdateTimeline = async (timelineEvents: TimelineEvent[]) => {
+    try {
+      await update({ timeline: timelineEvents });
+      toast.success('Aturcara berjaya dikemaskini!');
+    } catch (err) {
+      toast.error('Gagal mengemaskini aturcara');
+    }
+  };
+
+  // Convert default timeline to match type if needed (ensure icon string compatibility)
+  const initialTimeline = (event?.timeline || DEFAULT_WEDDING_TIMELINE).map(ev => ({
+    ...ev,
+    icon: ev.icon || 'clock'
+  })) as TimelineEvent[];
 
   if (loading) {
     return (
@@ -124,6 +142,7 @@ export default function EventDetailPage() {
   const tabs: { key: TabType; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: 'qrcode', label: 'QR Code', icon: <QrCode className="w-4 h-4" /> },
     { key: 'rsvp', label: 'RSVP', icon: <Users className="w-4 h-4" />, count: rsvpStats?.total },
+    { key: 'timeline', label: 'Aturcara', icon: <Clock className="w-4 h-4" /> },
     { key: 'memories', label: 'Kenangan', icon: <Heart className="w-4 h-4" />, count: (stats?.totalWishes || 0) + (stats?.totalPhotos || 0) },
     { key: 'appearance', label: 'Reka Bentuk', icon: <Sparkles className="w-4 h-4" /> },
   ];
@@ -181,35 +200,72 @@ export default function EventDetailPage() {
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-4 divide-x divide-secondary-100 border-t border-secondary-100">
-          <div className="p-4 text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
-              <Users className="w-4 h-4" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-secondary-100 border-t border-secondary-100">
+          <div className="p-4 text-center group cursor-default hover:bg-slate-50 transition-colors">
+            <div className="flex items-center justify-center gap-2 text-primary-600 mb-1 group-hover:scale-110 transition-transform">
+              <Users className="w-5 h-5" />
             </div>
-            <p className="text-xl font-semibold text-secondary-800">{rsvpStats?.attending || 0}</p>
-            <p className="text-xs text-secondary-500">Attending</p>
+            <p className="text-2xl font-bold text-secondary-800">{rsvpStats?.attending || 0}</p>
+            <p className="text-xs font-medium text-secondary-500 uppercase tracking-wider">Hadir</p>
           </div>
-          <div className="p-4 text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
-              <Users className="w-4 h-4" />
+          <div className="p-4 text-center group cursor-default hover:bg-slate-50 transition-colors">
+            <div className="flex items-center justify-center gap-2 text-blue-500 mb-1 group-hover:scale-110 transition-transform">
+              <Users className="w-5 h-5" />
             </div>
-            <p className="text-xl font-semibold text-secondary-800">{stats?.totalGuests || 0}</p>
-            <p className="text-xs text-secondary-500">Guestbook</p>
+            <p className="text-2xl font-bold text-secondary-800">{stats?.totalGuests || 0}</p>
+            <p className="text-xs font-medium text-secondary-500 uppercase tracking-wider">Tetamu</p>
           </div>
-          <div className="p-4 text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
-              <Heart className="w-4 h-4" />
+          <div className="p-4 text-center group cursor-default hover:bg-slate-50 transition-colors">
+            <div className="flex items-center justify-center gap-2 text-rose-500 mb-1 group-hover:scale-110 transition-transform">
+              <Heart className="w-5 h-5" />
             </div>
-            <p className="text-xl font-semibold text-secondary-800">{stats?.totalWishes || 0}</p>
-            <p className="text-xs text-secondary-500">Wishes</p>
+            <p className="text-2xl font-bold text-secondary-800">{stats?.totalWishes || 0}</p>
+            <p className="text-xs font-medium text-secondary-500 uppercase tracking-wider">Ucapan</p>
           </div>
-          <div className="p-4 text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
-              <Camera className="w-4 h-4" />
+          <div className="p-4 text-center group cursor-default hover:bg-slate-50 transition-colors">
+            <div className="flex items-center justify-center gap-2 text-amber-500 mb-1 group-hover:scale-110 transition-transform">
+              <Camera className="w-5 h-5" />
             </div>
-            <p className="text-xl font-semibold text-secondary-800">{stats?.totalPhotos || 0}</p>
-            <p className="text-xs text-secondary-500">Photos</p>
+            <p className="text-2xl font-bold text-secondary-800">{stats?.totalPhotos || 0}</p>
+            <p className="text-xs font-medium text-secondary-500 uppercase tracking-wider">Foto</p>
           </div>
+        </div>
+
+        {/* Quick Actions Bar */}
+        <div className="bg-secondary-50 p-3 flex justify-center gap-3 border-t border-secondary-100">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-secondary-600 hover:text-primary-600 hover:bg-white"
+            icon={<Download className="w-4 h-4" />}
+            onClick={() => setActiveTab('qrcode')}
+          >
+            Download QR
+          </Button>
+          <div className="w-px bg-secondary-200 h-6 my-auto" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-secondary-600 hover:text-primary-600 hover:bg-white"
+            icon={<Copy className="w-4 h-4" />}
+            onClick={() => {
+              const url = `${window.location.origin}/wedding/${event.weddingId}`;
+              navigator.clipboard.writeText(url);
+              toast.success('Link disalin!');
+            }}
+          >
+            Copy Link
+          </Button>
+          <div className="w-px bg-secondary-200 h-6 my-auto" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-secondary-600 hover:text-primary-600 hover:bg-white"
+            icon={<Edit className="w-4 h-4" />}
+            onClick={() => setActiveTab('appearance')}
+          >
+            Edit Design
+          </Button>
         </div>
       </Card>
 
@@ -241,7 +297,7 @@ export default function EventDetailPage() {
       </div>
 
       {/* Tab Content */}
-      <div>
+      <div className="animate-fade-in-up">
         {activeTab === 'qrcode' && (
           <div className="max-w-md mx-auto">
             <QRCodeDisplay
@@ -273,6 +329,15 @@ export default function EventDetailPage() {
                 description="Could not load RSVP settings"
               />
             )}
+          </div>
+        )}
+
+        {activeTab === 'timeline' && (
+          <div className="max-w-3xl mx-auto">
+            <TimelineEditor
+              initialEvents={initialTimeline}
+              onSave={handleUpdateTimeline}
+            />
           </div>
         )}
 

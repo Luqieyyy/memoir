@@ -200,6 +200,8 @@ export default function WeddingPage() {
                     </div>
                     <GuestSubmissionForm
                       eventId={event.id}
+                      brideName={event.brideName}
+                      groomName={event.groomName}
                       onSuccess={() => {
                         setShowConfetti(true);
                         setTimeout(() => setShowConfetti(false), 5000);

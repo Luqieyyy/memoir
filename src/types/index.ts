@@ -27,8 +27,18 @@ export interface WeddingEvent {
   qrCodeUrl: string; // Full URL for QR code
   coverImage?: string;
   isActive: boolean;
+  timeline?: TimelineEvent[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface TimelineEvent {
+  id: string;
+  time: string;
+  title: string;
+  description?: string;
+  location?: string;
+  icon: string;
 }
 
 export interface CreateEventInput {
@@ -48,6 +58,7 @@ export interface UpdateEventInput {
   venue?: string;
   welcomeMessage?: string;
   isActive?: boolean;
+  timeline?: TimelineEvent[];
 }
 
 // ============================================

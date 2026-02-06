@@ -1,16 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { TimelineEvent } from '@/types';
 import { Clock, MapPin, Heart, Camera, Sparkles } from 'lucide-react';
-
-interface TimelineEvent {
-    id: string;
-    time: string;
-    title: string;
-    description?: string;
-    location?: string;
-    icon?: 'ceremony' | 'reception' | 'photo' | 'music' | 'dinner' | 'custom';
-}
 
 interface WeddingTimelineProps {
     events: TimelineEvent[];
@@ -18,7 +10,17 @@ interface WeddingTimelineProps {
     variant?: 'vertical' | 'horizontal';
 }
 
-const iconMap = {
+const iconMap: Record<string, React.ReactNode> = {
+    // New generic icons
+    clock: <Clock className="w-5 h-5" />,
+    'map-pin': <MapPin className="w-5 h-5" />,
+    heart: <Heart className="w-5 h-5" />,
+    camera: <Camera className="w-5 h-5" />,
+    sparkles: <Sparkles className="w-5 h-5" />,
+
+    utensils: <Heart className="w-5 h-5" />,
+
+    // Legacy specific icons
     ceremony: <Heart className="w-5 h-5" />,
     reception: <Sparkles className="w-5 h-5" />,
     photo: <Camera className="w-5 h-5" />,
