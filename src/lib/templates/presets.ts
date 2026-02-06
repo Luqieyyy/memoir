@@ -118,11 +118,11 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
     },
     sections: {
         rsvp: true,
-        wishes: true,
-        photos: true,
+        timeline: true,
+        memories: true,
         share: true,
     },
-    sectionOrder: ['rsvp', 'wishes', 'photos', 'share'],
+    sectionOrder: ['rsvp', 'timeline', 'memories', 'share'],
 };
 
 // ============================================

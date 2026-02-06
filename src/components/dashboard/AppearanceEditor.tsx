@@ -312,9 +312,9 @@ export const AppearanceEditor: React.FC<AppearanceEditorProps> = ({
                         <div className="space-y-3">
                             {[
                                 { key: 'rsvp', label: 'RSVP', description: 'Borang kehadiran tetamu' },
-                                { key: 'wishes', label: 'Ucapan', description: 'Paparan ucapan dari tetamu' },
-                                { key: 'photos', label: 'Galeri', description: 'Galeri foto dari tetamu' },
-                                { key: 'share', label: 'Kongsi', description: 'Butang kongsi ke media sosial' },
+                                { key: 'timeline', label: 'Aturcara', description: 'Jadual waktu majlis' },
+                                { key: 'memories', label: 'Kenangan', description: 'Ucapan dan foto dari tetamu' },
+                                { key: 'share', label: 'Kongsi', description: 'Borang kongsi ucapan/foto' },
                             ].map((section) => (
                                 <div
                                     key={section.key}

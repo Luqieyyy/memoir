@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { usePublicEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
-import { WeddingHero, GuestSubmissionForm, WishDisplay, PhotoGallery, RSVPForm, ThemeProvider } from '@/components/wedding';
-import { Spinner, Card, EmptyState } from '@/components/ui';
-import { Heart, MessageSquare, Image, ChevronDown, Calendar } from 'lucide-react';
+import { WeddingHero, GuestSubmissionForm, RSVPForm, ThemeProvider, MemoryWall, WeddingTimeline, DEFAULT_WEDDING_TIMELINE, ShareCard } from '@/components/wedding';
+import { Spinner, Card } from '@/components/ui';
+import { Heart, Image, ChevronDown, Calendar, Clock } from 'lucide-react';
+import { FloatingPetals, CountdownTimer, MusicPlayer, Confetti } from '@/components/effects';
 
-type SectionType = 'rsvp' | 'wishes' | 'photos' | 'share';
+type SectionType = 'rsvp' | 'memories' | 'share' | 'timeline';
 
 export default function WeddingPage() {
   const params = useParams();
@@ -20,6 +21,7 @@ export default function WeddingPage() {
   const { theme, loading: themeLoading } = useTheme(event?.id || null);
 
   const [activeSection, setActiveSection] = useState<SectionType>('rsvp');
+  const [showConfetti, setShowConfetti] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Scroll to content section
@@ -58,9 +60,9 @@ export default function WeddingPage() {
 
   const sections: { key: SectionType; label: string; icon: React.ReactNode }[] = [
     { key: 'rsvp', label: 'RSVP', icon: <Calendar className="w-4 h-4" /> },
-    { key: 'wishes', label: 'Wishes', icon: <MessageSquare className="w-4 h-4" /> },
-    { key: 'photos', label: 'Gallery', icon: <Image className="w-4 h-4" /> },
-    { key: 'share', label: 'Share', icon: <Heart className="w-4 h-4" /> },
+    { key: 'timeline', label: 'Aturcara', icon: <Clock className="w-4 h-4" /> },
+    { key: 'memories', label: 'Kenangan', icon: <Heart className="w-4 h-4" /> },
+    { key: 'share', label: 'Kongsi', icon: <Image className="w-4 h-4" /> },
   ];
 
   // Check if initial theme loading
@@ -89,12 +91,30 @@ export default function WeddingPage() {
 
   return (
     <Wrapper>
-      <div className="min-h-screen transition-colors duration-500" style={styles}>
+      <div className="min-h-screen transition-colors duration-500 relative" style={styles}>
+        {/* Floating Petals Background */}
+        <FloatingPetals count={12} types={['petal', 'heart']} />
+
+        {/* Confetti Celebration */}
+        <Confetti active={showConfetti} duration={4000} particleCount={60} />
+
+        {/* Music Player */}
+        <MusicPlayer variant="floating" autoPlay={false} />
+
         {/* Hero Section */}
         <WeddingHero event={event} />
 
+        {/* Countdown Timer */}
+        <div className="relative z-10 -mt-16 mb-8 px-4">
+          <CountdownTimer
+            targetDate={event.weddingDate}
+            variant="elegant"
+            className="max-w-2xl mx-auto"
+          />
+        </div>
+
         {/* Scroll Indicator */}
-        <div className="flex justify-center -mt-8 relative z-10">
+        <div className="flex justify-center mb-4 relative z-10">
           <button
             onClick={scrollToContent}
             className="w-12 h-12 bg-white rounded-full shadow-elegant flex items-center justify-center animate-bounce hover:scale-110 transition-transform text-primary-600"
@@ -144,6 +164,8 @@ export default function WeddingPage() {
                       groomName={event.groomName}
                       onSubmit={async (data) => {
                         await submitRSVP(data);
+                        setShowConfetti(true);
+                        setTimeout(() => setShowConfetti(false), 5000);
                       }}
                     />
                   ) : (
@@ -155,39 +177,69 @@ export default function WeddingPage() {
               )}
 
               {activeSection === 'share' && (
-                <GuestSubmissionForm
-                  eventId={event.id}
-                  onSuccess={() => {
-                    setActiveSection('photos');
-                  }}
-                />
-              )}
+                <div className="space-y-8">
+                  {/* Share Invitation Card */}
+                  <ShareCard
+                    brideName={event.brideName}
+                    groomName={event.groomName}
+                    weddingDate={event.weddingDate}
+                    weddingId={event.weddingId}
+                    location={event.venue}
+                    className="max-w-md mx-auto"
+                  />
 
-              {activeSection === 'wishes' && (
-                <div>
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                      Heartfelt Wishes
-                    </h2>
-                    <p className="text-secondary-500">
-                      Messages from friends and family
-                    </p>
+                  {/* Guest Submission Form */}
+                  <div className="max-w-xl mx-auto">
+                    <div className="text-center mb-6">
+                      <h3 className="text-xl font-display font-semibold text-secondary-800 mb-2">
+                        Kongsi Ucapan & Foto
+                      </h3>
+                      <p className="text-secondary-500 text-sm">
+                        Tinggalkan ucapan atau muat naik foto untuk pengantin
+                      </p>
+                    </div>
+                    <GuestSubmissionForm
+                      eventId={event.id}
+                      onSuccess={() => {
+                        setShowConfetti(true);
+                        setTimeout(() => setShowConfetti(false), 5000);
+                        setActiveSection('memories');
+                      }}
+                    />
                   </div>
-                  <WishDisplay wishes={wishes} loading={wishesLoading} />
                 </div>
               )}
 
-              {activeSection === 'photos' && (
+              {activeSection === 'timeline' && (
                 <div>
                   <div className="text-center mb-8">
                     <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                      Memory Gallery
+                      Aturcara Majlis
                     </h2>
                     <p className="text-secondary-500">
-                      Captured moments from the celebration
+                      Tentative program hari bahagia kami
                     </p>
                   </div>
-                  <PhotoGallery photos={photos} loading={photosLoading} />
+                  <WeddingTimeline events={DEFAULT_WEDDING_TIMELINE} variant="vertical" />
+                </div>
+              )}
+
+              {activeSection === 'memories' && (
+                <div>
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
+                      Memory Wall
+                    </h2>
+                    <p className="text-secondary-500">
+                      Wishes and photos from friends and family
+                    </p>
+                  </div>
+                  <MemoryWall
+                    wishes={wishes}
+                    photos={photos}
+                    wishesLoading={wishesLoading}
+                    photosLoading={photosLoading}
+                  />
                 </div>
               )}
             </div>

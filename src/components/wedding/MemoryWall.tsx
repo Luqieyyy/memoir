@@ -230,15 +230,15 @@ const WishCard: React.FC<{ wish: WeddingWish }> = ({ wish }) => {
                             {wish.guestName.charAt(0).toUpperCase()}
                         </span>
                     </div>
+                    <p className="text-sm font-medium text-secondary-800">{wish.guestName}</p>
                 </div>
             </div>
-        </div>
 
-            {/* Decorative corner */ }
-    <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden">
-        <div className={`absolute -top-4 -right-4 w-8 h-8 rotate-45 bg-gradient-to-br ${getGradient(wish.guestName)}`} />
-    </div>
-        </div >
+            {/* Decorative corner */}
+            <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden">
+                <div className={`absolute -top-4 -right-4 w-8 h-8 rotate-45 bg-gradient-to-br ${getGradient(wish.guestName)}`} />
+            </div>
+        </div>
     );
 };
 

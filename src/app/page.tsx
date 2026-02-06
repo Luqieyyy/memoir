@@ -12,6 +12,7 @@ import {
   TestimonialsSection,
   CTASection,
   Footer,
+  AnimatedStatsBanner,
 } from '@/components/landing';
 
 export default function HomePage() {
@@ -41,6 +42,9 @@ export default function HomePage() {
 
         {/* Testimonials */}
         <TestimonialsSection />
+
+        {/* Stats Banner */}
+        <AnimatedStatsBanner />
 
         {/* Final CTA */}
         <CTASection />

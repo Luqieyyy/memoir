@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuthContext } from '@/contexts';
 import { useEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
-import { WishDisplay, PhotoGallery, RSVPDashboard } from '@/components/wedding';
+import { RSVPDashboard, MemoryWall } from '@/components/wedding';
 import { AppearanceEditor } from '@/components/dashboard';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
@@ -16,18 +16,17 @@ import {
   MapPin,
   Users,
   Heart,
-  Image,
   QrCode,
   Edit,
   Trash2,
   ExternalLink,
   Download,
-  MessageSquare,
   Sparkles,
+  Camera,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'rsvp' | 'wishes' | 'photos' | 'appearance';
+type TabType = 'qrcode' | 'rsvp' | 'memories' | 'appearance';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -125,8 +124,7 @@ export default function EventDetailPage() {
   const tabs: { key: TabType; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: 'qrcode', label: 'QR Code', icon: <QrCode className="w-4 h-4" /> },
     { key: 'rsvp', label: 'RSVP', icon: <Users className="w-4 h-4" />, count: rsvpStats?.total },
-    { key: 'wishes', label: 'Wishes', icon: <MessageSquare className="w-4 h-4" />, count: stats?.totalWishes },
-    { key: 'photos', label: 'Photos', icon: <Image className="w-4 h-4" />, count: stats?.totalPhotos },
+    { key: 'memories', label: 'Kenangan', icon: <Heart className="w-4 h-4" />, count: (stats?.totalWishes || 0) + (stats?.totalPhotos || 0) },
     { key: 'appearance', label: 'Reka Bentuk', icon: <Sparkles className="w-4 h-4" /> },
   ];
 
@@ -207,7 +205,7 @@ export default function EventDetailPage() {
           </div>
           <div className="p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-primary-600 mb-1">
-              <Image className="w-4 h-4" />
+              <Camera className="w-4 h-4" />
             </div>
             <p className="text-xl font-semibold text-secondary-800">{stats?.totalPhotos || 0}</p>
             <p className="text-xs text-secondary-500">Photos</p>
@@ -278,15 +276,14 @@ export default function EventDetailPage() {
           </div>
         )}
 
-        {activeTab === 'wishes' && (
+        {activeTab === 'memories' && (
           <div>
-            <WishDisplay wishes={wishes} loading={wishesLoading} />
-          </div>
-        )}
-
-        {activeTab === 'photos' && (
-          <div>
-            <PhotoGallery photos={photos} loading={photosLoading} />
+            <MemoryWall
+              wishes={wishes}
+              photos={photos}
+              wishesLoading={wishesLoading}
+              photosLoading={photosLoading}
+            />
           </div>
         )}
 

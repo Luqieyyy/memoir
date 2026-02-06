@@ -279,8 +279,8 @@ export interface HeroSettings {
 
 export interface SectionVisibility {
   rsvp: boolean;
-  wishes: boolean;
-  photos: boolean;
+  timeline: boolean;
+  memories: boolean;
   share: boolean;
 }
 
