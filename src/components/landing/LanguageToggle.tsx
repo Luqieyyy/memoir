@@ -1,7 +1,7 @@
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
-import { MessageSquare } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function LanguageToggle() {
@@ -10,12 +10,12 @@ export default function LanguageToggle() {
   return (
     <motion.button
       onClick={toggleLanguage}
-      className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-champagne/50 hover:bg-white hover:border-champagne transition-all shadow-soft"
+      className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-primary-400/30 transition-all"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <MessageSquare className="w-4 h-4 text-secondary-600" />
-      <span className="text-sm font-medium text-secondary-700 uppercase tracking-wide">
+      <Globe className="w-4 h-4 text-muted" />
+      <span className="text-sm font-medium text-ivory uppercase tracking-wide">
         {language === 'bm' ? 'EN' : 'BM'}
       </span>
     </motion.button>

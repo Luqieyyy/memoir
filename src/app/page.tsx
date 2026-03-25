@@ -18,35 +18,35 @@ import {
 export default function HomePage() {
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-cream">
+      <div className="min-h-screen bg-secondary-950">
         {/* Navigation */}
         <Navbar />
 
-        {/* Hero Section */}
+        {/* Hero — Emotional hook + value prop + app preview */}
         <HeroSection />
 
-        {/* About KR Wedding */}
-        <AboutSection />
-
-        {/* Why Choose KR Wedding */}
-        <WhyChooseSection />
-
-        {/* Memoir Digital Experience */}
-        <MemoirSection />
-
-        {/* Wishes & Photo Gallery */}
-        <WishesGallerySection />
-
-        {/* Wedding Packages */}
-        <PackagesSection />
-
-        {/* Testimonials */}
-        <TestimonialsSection />
-
-        {/* Stats Banner */}
+        {/* Social Proof Stats */}
         <AnimatedStatsBanner />
 
-        {/* Final CTA */}
+        {/* Features — What makes Memoir special */}
+        <AboutSection />
+
+        {/* How It Works — 4-step flow */}
+        <WhyChooseSection />
+
+        {/* Live Preview — See Memoir in action */}
+        <MemoirSection />
+
+        {/* Pricing — 3 tiers */}
+        <PackagesSection />
+
+        {/* Testimonials — Social proof */}
+        <TestimonialsSection />
+
+        {/* Wishes Gallery Preview */}
+        <WishesGallerySection />
+
+        {/* Final CTA — Urgency + emotional hook */}
         <CTASection />
 
         {/* Footer */}

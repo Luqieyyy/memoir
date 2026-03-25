@@ -1,50 +1,72 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, Heart } from 'lucide-react';
+import { Sparkles, ArrowRight, QrCode, MessageSquare, Camera, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+// Floating bokeh particle component
+const BokehParticle = ({ delay, size, x, y, color }: { delay: number; size: number; x: string; y: string; color: string }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{ opacity: [0, 0.4, 0.2, 0.4, 0], scale: [0.8, 1, 0.9, 1, 0.8] }}
+    transition={{ duration: 8, delay, repeat: Infinity, ease: 'easeInOut' }}
+    className="absolute rounded-full"
+    style={{
+      width: size,
+      height: size,
+      left: x,
+      top: y,
+      background: color,
+      filter: 'blur(1px)',
+    }}
+  />
+);
+
 export default function HeroSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Decorative Background */}
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* Dark Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-hero" />
+
+      {/* Ambient glow effects */}
       <div className="absolute inset-0">
-        {/* Gradient base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cream via-champagne/30 to-blush/20" />
-        
-        {/* Animated blobs */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="absolute top-20 left-10 w-72 h-72 bg-primary-200/40 rounded-full blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.3, ease: 'easeOut' }}
-          className="absolute bottom-20 right-10 w-96 h-96 bg-blush/50 rounded-full blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.6, ease: 'easeOut' }}
-          className="absolute top-1/2 left-1/3 w-64 h-64 bg-champagne/40 rounded-full blur-3xl"
-        />
-        
-        {/* Decorative elements */}
-        <div className="absolute inset-0 wedding-pattern opacity-30" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary-400/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent-500/8 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-400/5 rounded-full blur-[150px]" />
       </div>
 
+      {/* Bokeh particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        <BokehParticle delay={0} size={6} x="15%" y="20%" color="rgba(232,180,184,0.5)" />
+        <BokehParticle delay={1} size={4} x="80%" y="15%" color="rgba(201,169,110,0.4)" />
+        <BokehParticle delay={2} size={8} x="60%" y="70%" color="rgba(232,180,184,0.3)" />
+        <BokehParticle delay={3} size={5} x="25%" y="80%" color="rgba(201,169,110,0.3)" />
+        <BokehParticle delay={1.5} size={3} x="90%" y="50%" color="rgba(232,180,184,0.4)" />
+        <BokehParticle delay={0.5} size={7} x="45%" y="30%" color="rgba(201,169,110,0.25)" />
+        <BokehParticle delay={2.5} size={4} x="70%" y="85%" color="rgba(232,180,184,0.35)" />
+        <BokehParticle delay={3.5} size={6} x="10%" y="55%" color="rgba(201,169,110,0.3)" />
+      </div>
+
+      {/* Decorative rings */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/[0.03] rounded-full"
+      />
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-white/[0.02] rounded-full"
+      />
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="text-center lg:text-left"
@@ -54,7 +76,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-primary-700 text-sm font-medium mb-6 shadow-soft border border-champagne/50"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full text-primary-400 text-sm font-medium mb-6 border border-white/10"
             >
               <Sparkles className="w-4 h-4" />
               <span>{t('hero', 'badge')}</span>
@@ -65,55 +87,37 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-secondary-800 mb-4 leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-ivory mb-6 leading-[1.1] tracking-tight"
             >
-              {t('hero', 'headline')}
+              {language === 'bm' ? (
+                <>
+                  Setiap Tetamu.{' '}
+                  <span className="text-gradient">Setiap Ucapan.</span>
+                  <br />
+                  Setiap Foto.
+                  <br />
+                  <span className="text-gradient-gold">Satu Tempat Indah.</span>
+                </>
+              ) : (
+                <>
+                  Every Guest.{' '}
+                  <span className="text-gradient">Every Wish.</span>
+                  <br />
+                  Every Photo.
+                  <br />
+                  <span className="text-gradient-gold">One Beautiful Place.</span>
+                </>
+              )}
             </motion.h1>
 
+            {/* Subheadline */}
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-2xl sm:text-3xl font-script text-primary-600 mb-6"
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-lg sm:text-xl text-muted mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0"
             >
               {t('hero', 'subheadline')}
-            </motion.p>
-
-            {/* Collaboration Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex items-center justify-center lg:justify-start gap-3 mb-6"
-            >
-              <Image
-                src="/krwedding.jpg"
-                alt="KR Wedding"
-                width={40}
-                height={40}
-                className="rounded-full shadow-soft border-2 border-white"
-              />
-              <Heart className="w-4 h-4 text-primary-500 fill-primary-500" />
-              <Image
-                src="/memoir.jpg"
-                alt="Memoir"
-                width={40}
-                height={40}
-                className="rounded-full shadow-soft border-2 border-white"
-              />
-              <span className="text-sm font-medium text-secondary-600 ml-2">
-                KR Wedding × Memoir
-              </span>
-            </motion.div>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-lg text-secondary-600 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0"
-            >
-              {t('hero', 'description')}
             </motion.p>
 
             {/* CTAs */}
@@ -124,73 +128,177 @@ export default function HeroSection() {
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <Link
-                href="https://wa.me/60176457094"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 via-primary-600 to-dustyrose text-white rounded-full font-semibold hover:shadow-elegant transition-all hover:scale-105"
+                href="/register"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-400 to-accent-500 text-secondary-950 rounded-xl font-semibold hover:shadow-glow transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 {t('hero', 'cta')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="#packages"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/80 backdrop-blur-sm text-secondary-700 rounded-full font-semibold hover:bg-white transition-all shadow-soft border border-champagne/50 hover:border-champagne"
+                href="#how-it-works"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 backdrop-blur-sm text-ivory rounded-xl font-semibold border border-white/10 hover:bg-white/10 hover:border-primary-400/30 transition-all"
               >
                 {t('hero', 'ctaSecondary')}
               </Link>
             </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1 }}
+              className="mt-10 flex items-center gap-6 justify-center lg:justify-start"
+            >
+              <div className="flex items-center gap-2 text-muted text-sm">
+                <div className="w-2 h-2 rounded-full bg-mint animate-pulse" />
+                <span>{language === 'bm' ? '500+ pasangan' : '500+ couples'}</span>
+              </div>
+              <div className="w-px h-4 bg-white/10" />
+              <div className="flex items-center gap-2 text-muted text-sm">
+                <div className="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
+                <span>{language === 'bm' ? 'Selamat & terjamin' : 'Secure & trusted'}</span>
+              </div>
+              <div className="w-px h-4 bg-white/10 hidden sm:block" />
+              <div className="hidden sm:flex items-center gap-1 text-muted text-sm">
+                <span>🇲🇾</span>
+                <span>Made in Malaysia</span>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* Right Content - Decorative Image Area */}
+          {/* Right Content — App Preview / Phone Mockup */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:flex justify-center items-center"
           >
-            <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Main decorative frame */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-blush/50 rounded-3xl transform rotate-3 shadow-elegant" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-champagne to-primary-50 rounded-3xl transform -rotate-3 shadow-soft" />
-              
-              {/* Center logo display */}
-              <div className="absolute inset-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-elegant flex items-center justify-center overflow-hidden">
-                <div className="text-center p-8">
-                  <Image
-                    src="/krwedding.jpg"
-                    alt="KR Wedding"
-                    width={150}
-                    height={150}
-                    className="rounded-full shadow-elegant mx-auto mb-6 border-4 border-champagne/50"
-                  />
-                  <h3 className="font-display font-bold text-2xl text-secondary-800 mb-2">
-                    KR Wedding
-                  </h3>
-                  <p className="text-secondary-500 text-sm font-medium tracking-wider uppercase">
-                    & Event Planner
-                  </p>
-                  <div className="mt-4 flex items-center justify-center gap-2 text-primary-600">
-                    <Heart className="w-4 h-4 fill-current" />
-                    <span className="font-script text-lg">× Memoir</span>
+            {/* Glow behind the mockup */}
+            <div className="absolute w-[400px] h-[400px] bg-primary-400/10 rounded-full blur-[100px]" />
+
+            {/* Phone mockup frame */}
+            <div className="relative w-[300px]">
+              {/* Phone shell */}
+              <div className="relative bg-secondary-900 rounded-[2.5rem] p-3 shadow-luxury border border-white/10">
+                {/* Screen */}
+                <div className="bg-secondary-950 rounded-[2rem] overflow-hidden">
+                  {/* Status bar */}
+                  <div className="px-6 pt-4 pb-2 flex justify-between items-center">
+                    <span className="text-[10px] text-muted">9:41</span>
+                    <div className="w-20 h-5 bg-secondary-900 rounded-full" />
+                    <div className="flex gap-1">
+                      <div className="w-3 h-2 bg-muted/50 rounded-sm" />
+                      <div className="w-3 h-2 bg-muted/50 rounded-sm" />
+                    </div>
+                  </div>
+
+                  {/* App content */}
+                  <div className="px-5 pb-6">
+                    {/* App header */}
+                    <div className="text-center py-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center mx-auto mb-3 shadow-glow">
+                        <Heart className="w-6 h-6 text-secondary-950 fill-secondary-950" />
+                      </div>
+                      <h3 className="font-display font-bold text-ivory text-base">
+                        Sarah & Ahmad
+                      </h3>
+                      <p className="text-primary-400 text-xs mt-1 font-serif italic">
+                        15 Mac 2026
+                      </p>
+                    </div>
+
+                    {/* Quick actions */}
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      {[
+                        { icon: MessageSquare, label: language === 'bm' ? 'Ucapan' : 'Wishes' },
+                        { icon: Camera, label: language === 'bm' ? 'Foto' : 'Photos' },
+                        { icon: QrCode, label: 'QR Code' },
+                      ].map((action, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1 + i * 0.15 }}
+                          className="bg-white/5 rounded-xl p-3 text-center border border-white/5"
+                        >
+                          <action.icon className="w-5 h-5 text-primary-400 mx-auto mb-1.5" />
+                          <span className="text-[10px] text-muted">{action.label}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Recent wishes preview */}
+                    <div className="space-y-2">
+                      {[
+                        { name: 'Nurul Aisyah', msg: 'Selamat pengantin baru! 💕' },
+                        { name: 'Hafiz Rahman', msg: 'Barakallahu lakuma 🤍' },
+                      ].map((wish, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 1.5 + i * 0.2 }}
+                          className="bg-white/5 rounded-xl p-3 border border-white/5"
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary-400 to-accent-500" />
+                            <span className="text-[11px] font-semibold text-ivory">{wish.name}</span>
+                          </div>
+                          <p className="text-[10px] text-muted leading-relaxed">{wish.msg}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Photo grid preview */}
+                    <div className="grid grid-cols-3 gap-1.5 mt-3">
+                      {[1, 2, 3].map((i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 2 + i * 0.1 }}
+                          className="aspect-square bg-gradient-to-br from-primary-400/20 to-accent-500/10 rounded-lg border border-white/5"
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating decorative elements */}
+              {/* Floating notification badge */}
               <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary-400 to-dustyrose rounded-full flex items-center justify-center shadow-elegant"
+                initial={{ opacity: 0, scale: 0, x: 30 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ delay: 1.8, type: 'spring', stiffness: 200 }}
+                className="absolute -top-4 -right-8 bg-secondary-900 rounded-2xl p-3 shadow-luxury border border-white/10 max-w-[180px]"
               >
-                <Heart className="w-10 h-10 text-white fill-white" />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-mint/20 flex items-center justify-center flex-shrink-0">
+                    <Camera className="w-4 h-4 text-mint" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold text-ivory">{language === 'bm' ? 'Foto baru!' : 'New photo!'}</p>
+                    <p className="text-[9px] text-muted">{language === 'bm' ? 'Mira baru muat naik' : 'Mira just uploaded'}</p>
+                  </div>
+                </div>
               </motion.div>
-              
+
+              {/* Floating counter */}
               <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-champagne to-primary-200 rounded-full flex items-center justify-center shadow-soft"
+                initial={{ opacity: 0, scale: 0, x: -30 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ delay: 2.2, type: 'spring', stiffness: 200 }}
+                className="absolute bottom-20 -left-12 bg-secondary-900 rounded-2xl p-3 shadow-luxury border border-white/10"
               >
-                <Sparkles className="w-8 h-8 text-primary-600" />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary-400/20 flex items-center justify-center">
+                    <Heart className="w-4 h-4 text-primary-400 fill-primary-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-ivory">128</p>
+                    <p className="text-[9px] text-muted">{language === 'bm' ? 'ucapan' : 'wishes'}</p>
+                  </div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
@@ -201,15 +309,15 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 2.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-secondary-300 rounded-full flex justify-center pt-2"
+          className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2"
         >
-          <div className="w-1.5 h-3 bg-secondary-400 rounded-full" />
+          <div className="w-1.5 h-3 bg-primary-400/60 rounded-full" />
         </motion.div>
       </motion.div>
     </section>

@@ -35,7 +35,7 @@ export async function uploadPhoto(
 }> {
   const storagePath = generateFilePath(eventId, file.name);
   const storageRef = ref(storage, storagePath);
-  
+
   if (onProgress) {
     // Upload with progress tracking
     const uploadTask = uploadBytesResumable(storageRef, file, {
@@ -44,7 +44,7 @@ export async function uploadPhoto(
         originalName: file.name,
       },
     });
-    
+
     return new Promise((resolve, reject) => {
       uploadTask.on(
         'state_changed',
@@ -75,9 +75,9 @@ export async function uploadPhoto(
         originalName: file.name,
       },
     });
-    
+
     const url = await getDownloadURL(storageRef);
-    
+
     return {
       url,
       storagePath,
@@ -108,28 +108,28 @@ export async function uploadMultiplePhotos(
   const totalFiles = files.length;
   let completedFiles = 0;
   const fileProgress: number[] = new Array(totalFiles).fill(0);
-  
+
   const updateTotalProgress = () => {
     if (onTotalProgress) {
       const total = fileProgress.reduce((sum, p) => sum + p, 0);
       onTotalProgress(total / totalFiles);
     }
   };
-  
+
   const uploadPromises = files.map(async (file, index) => {
     const result = await uploadPhoto(eventId, file, (progress) => {
       fileProgress[index] = progress;
       updateTotalProgress();
     });
-    
+
     completedFiles++;
     if (onFileComplete) {
       onFileComplete(index, { url: result.url, storagePath: result.storagePath });
     }
-    
+
     return result;
   });
-  
+
   return Promise.all(uploadPromises);
 }
 
@@ -146,10 +146,10 @@ export async function deletePhoto(storagePath: string): Promise<void> {
  */
 export async function deleteAllEventPhotos(eventId: string): Promise<void> {
   const folderRef = ref(storage, `events/${eventId}/photos`);
-  
+
   try {
     const listResult = await listAll(folderRef);
-    
+
     const deletePromises = listResult.items.map((itemRef) => deleteObject(itemRef));
     await Promise.all(deletePromises);
   } catch (error) {
@@ -177,7 +177,7 @@ export function validateFile(
   } = {}
 ): { valid: boolean; error?: string } {
   const { maxSizeMB = 10, allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'] } = options;
-  
+
   // Check file type
   if (!allowedTypes.includes(file.type)) {
     return {
@@ -185,7 +185,7 @@ export function validateFile(
       error: `File type not allowed. Accepted types: ${allowedTypes.join(', ')}`,
     };
   }
-  
+
   // Check file size
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
   if (file.size > maxSizeBytes) {
@@ -194,6 +194,29 @@ export function validateFile(
       error: `File size exceeds ${maxSizeMB}MB limit`,
     };
   }
-  
+
   return { valid: true };
+}
+
+/**
+ * Upload a background image for sections
+ */
+export async function uploadBackgroundImage(
+  eventId: string,
+  file: File
+): Promise<string> {
+  const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const uniqueId = uuidv4();
+  const storagePath = `events/${eventId}/backgrounds/${uniqueId}.${extension}`;
+  const storageRef = ref(storage, storagePath);
+
+  await uploadBytes(storageRef, file, {
+    contentType: file.type,
+    customMetadata: {
+      originalName: file.name,
+    },
+  });
+
+  const url = await getDownloadURL(storageRef);
+  return url;
 }

@@ -4,135 +4,99 @@ export const translations = {
   // Navigation
   nav: {
     home: { bm: 'Utama', en: 'Home' },
-    about: { bm: 'Tentang Kami', en: 'About Us' },
-    packages: { bm: 'Pakej', en: 'Packages' },
-    gallery: { bm: 'Galeri', en: 'Gallery' },
+    features: { bm: 'Ciri-ciri', en: 'Features' },
+    howItWorks: { bm: 'Cara Guna', en: 'How It Works' },
+    pricing: { bm: 'Harga', en: 'Pricing' },
     contact: { bm: 'Hubungi', en: 'Contact' },
+    // Legacy keys for compatibility
+    about: { bm: 'Ciri-ciri', en: 'Features' },
+    packages: { bm: 'Harga', en: 'Pricing' },
+    gallery: { bm: 'Galeri', en: 'Gallery' },
   },
 
   // Hero Section
   hero: {
     badge: {
-      bm: 'Perancang Perkahwinan Premium',
-      en: 'Premium Wedding Planner',
+      bm: 'Platform Kenangan Perkahwinan #1 di Malaysia',
+      en: '#1 Wedding Memory Platform in Malaysia',
     },
     headline: {
-      bm: 'Wujudkan Perkahwinan Impian Anda',
-      en: 'Create Your Dream Wedding',
+      bm: 'Setiap Tetamu.\nSetiap Ucapan.\nSetiap Foto.\nSatu Tempat Indah.',
+      en: 'Every Guest.\nEvery Wish.\nEvery Photo.\nOne Beautiful Place.',
     },
     subheadline: {
-      bm: 'Tanpa Tekanan, Penuh Kenangan Indah',
-      en: 'Stress-Free, Full of Beautiful Memories',
+      bm: 'Cara moden pasangan Malaysia mengabadikan kenangan perkahwinan — dengan satu kod QR.',
+      en: 'The modern way Malaysian couples capture wedding memories — powered by a single QR code.',
     },
     description: {
-      bm: 'KR Wedding & Event Planner × Memoir — Gabungan perkhidmatan perancangan perkahwinan profesional dengan platform kenangan digital yang membolehkan tetamu anda berkongsi ucapan dan foto melalui kod QR.',
-      en: 'KR Wedding & Event Planner × Memoir — The perfect combination of professional wedding planning services with a digital memory platform that allows your guests to share wishes and photos via QR code.',
+      bm: 'Hari perkahwinan anda berlalu dalam sekelip mata. Tetapi bagaimana jika setiap senyuman, setiap air mata bahagia, setiap ucapan ikhlas dari tetamu anda diabadikan selama-lamanya?',
+      en: 'Your wedding day flies by in a blink. But what if every smile, every tear of joy, every heartfelt wish from your guests was captured forever?',
     },
     cta: {
-      bm: 'Rancang Perkahwinan Anda',
-      en: 'Plan Your Wedding',
+      bm: 'Cipta Event Anda',
+      en: 'Create Your Event',
     },
     ctaSecondary: {
-      bm: 'Lihat Pakej',
-      en: 'View Packages',
+      bm: 'Lihat Cara Ia Berfungsi',
+      en: 'See How It Works',
+    },
+    tagline: {
+      bm: 'Di Mana Kenangan Menjadi Hidup',
+      en: 'Where Memories Come Alive',
     },
   },
 
-  // About Section
+  // About/Features Section — Rebranded for Memoir
   about: {
-    badge: { bm: 'Tentang Kami', en: 'About Us' },
+    badge: { bm: 'Kenapa Memoir?', en: 'Why Memoir?' },
     title: {
-      bm: 'KR Wedding & Event Planner',
-      en: 'KR Wedding & Event Planner',
+      bm: 'Lebih Dari Sekadar Album Foto',
+      en: 'More Than Just a Photo Album',
     },
     subtitle: {
-      bm: 'Lebih Dari Sekadar Perancang Perkahwinan',
-      en: 'More Than Just A Wedding Planner',
+      bm: 'Platform Kenangan Digital Premium',
+      en: 'Premium Digital Memory Platform',
     },
     description: {
-      bm: 'Dengan pengalaman bertahun-tahun dalam industri perkahwinan, KR Wedding & Event Planner komited untuk menjadikan hari istimewa anda benar-benar sempurna. Kami memahami bahawa setiap pasangan adalah unik, dan setiap perkahwinan harus mencerminkan cerita cinta anda.',
-      en: 'With years of experience in the wedding industry, KR Wedding & Event Planner is committed to making your special day truly perfect. We understand that every couple is unique, and every wedding should reflect your love story.',
+      bm: 'Memoir mengubah cara pasangan Malaysia mengumpul dan menyimpan kenangan perkahwinan. Dengan satu kod QR, tetamu boleh berkongsi ucapan ikhlas, muat naik foto, dan cipta kenangan digital yang cantik — semua secara real-time.',
+      en: 'Memoir transforms how Malaysian couples collect and preserve wedding memories. With a single QR code, guests can share heartfelt wishes, upload photos, and create beautiful digital memories — all in real-time.',
     },
     description2: {
-      bm: 'Dari perancangan awal hingga pelaksanaan, kami menguruskan setiap butiran dengan teliti supaya anda boleh menikmati setiap detik tanpa tekanan.',
-      en: 'From initial planning to execution, we manage every detail meticulously so you can enjoy every moment without stress.',
+      bm: 'Tiada lagi WhatsApp group bersepah. Tiada lagi foto hilang dalam gallery telefon. Semua di satu tempat yang indah.',
+      en: 'No more messy WhatsApp groups. No more photos lost in phone galleries. Everything in one beautiful place.',
     },
     stats: {
-      events: { bm: 'Majlis Berjaya', en: 'Successful Events' },
-      experience: { bm: 'Tahun Pengalaman', en: 'Years Experience' },
-      clients: { bm: 'Pelanggan Gembira', en: 'Happy Clients' },
+      events: { bm: 'Majlis Dicipta', en: 'Events Created' },
+      experience: { bm: 'Ucapan Dikumpul', en: 'Wishes Collected' },
+      clients: { bm: 'Pasangan Gembira', en: 'Happy Couples' },
     },
     followUs: { bm: 'Ikuti Kami', en: 'Follow Us' },
     contactUs: { bm: 'Hubungi Kami', en: 'Contact Us' },
   },
 
-  // Why Choose Section
+  // Why Choose Section — Rebranded
   whyChoose: {
-    badge: { bm: 'Kelebihan Kami', en: 'Our Advantages' },
+    badge: { bm: 'Kelebihan Memoir', en: 'Why Choose Memoir' },
     title: {
-      bm: 'Mengapa Pilih KR Wedding?',
-      en: 'Why Choose KR Wedding?',
+      bm: 'Kenapa Pasangan Pilih Memoir?',
+      en: 'Why Couples Choose Memoir',
     },
     subtitle: {
-      bm: 'Kami menawarkan perkhidmatan perkahwinan yang lengkap dan profesional',
-      en: 'We offer complete and professional wedding services',
+      bm: 'Pengalaman premium yang direka khas untuk perkahwinan moden',
+      en: 'A premium experience designed for modern weddings',
     },
-    features: [
-      {
-        title: { bm: 'Perancangan Menyeluruh', en: 'Comprehensive Planning' },
-        description: {
-          bm: 'Dari konsep hingga pelaksanaan, semuanya diuruskan dengan teliti dan profesional',
-          en: 'From concept to execution, everything is managed carefully and professionally',
-        },
-      },
-      {
-        title: { bm: 'Pakej Fleksibel', en: 'Flexible Packages' },
-        description: {
-          bm: 'Pilihan pakej yang boleh disesuaikan mengikut bajet dan keperluan anda',
-          en: 'Package options that can be customized according to your budget and needs',
-        },
-      },
-      {
-        title: { bm: 'Vendor Dipercayai', en: 'Trusted Vendors' },
-        description: {
-          bm: 'Rangkaian vendor berkualiti yang telah kami kerjasama selama bertahun-tahun',
-          en: 'Network of quality vendors we have collaborated with for years',
-        },
-      },
-      {
-        title: { bm: 'Koordinasi Hari Majlis', en: 'Event Day Coordination' },
-        description: {
-          bm: 'Pasukan profesional memastikan majlis berjalan lancar tanpa sebarang masalah',
-          en: 'Professional team ensures the event runs smoothly without any issues',
-        },
-      },
-      {
-        title: { bm: 'Sentuhan Peribadi', en: 'Personal Touch' },
-        description: {
-          bm: 'Setiap perkahwinan direka khas untuk mencerminkan personaliti pasangan',
-          en: 'Every wedding is specially designed to reflect the couple\'s personality',
-        },
-      },
-      {
-        title: { bm: 'Sokongan 24/7', en: '24/7 Support' },
-        description: {
-          bm: 'Kami sentiasa ada untuk menjawab pertanyaan dan menyelesaikan sebarang isu',
-          en: 'We are always available to answer questions and resolve any issues',
-        },
-      },
-    ],
   },
 
-  // Memoir Section
+  // Memoir / How It Works Section
   memoir: {
-    badge: { bm: 'Pengalaman Digital', en: 'Digital Experience' },
+    badge: { bm: 'Cara Ia Berfungsi', en: 'How It Works' },
     title: {
-      bm: 'Memoir — Abadikan Setiap Kenangan',
-      en: 'Memoir — Capture Every Memory',
+      bm: 'Semudah 1, 2, 3',
+      en: 'As Easy as 1, 2, 3',
     },
     subtitle: {
-      bm: 'Platform kenangan digital yang membolehkan tetamu berkongsi ucapan dan foto melalui satu kod QR',
-      en: 'A digital memory platform that allows guests to share wishes and photos through a single QR code',
+      bm: 'Cipta event, kongsikan QR, dan kumpul kenangan indah — semuanya automatik',
+      en: 'Create an event, share the QR code, and collect beautiful memories — all automatic',
     },
     features: [
       {
@@ -150,10 +114,10 @@ export const translations = {
         },
       },
       {
-        title: { bm: 'Galeri Foto', en: 'Photo Gallery' },
+        title: { bm: 'Galeri Foto Real-Time', en: 'Real-Time Photo Gallery' },
         description: {
           bm: 'Tetamu boleh memuat naik foto dan momen istimewa secara langsung',
-          en: 'Guests can upload photos and special moments directly',
+          en: 'Guests can upload photos and special moments in real-time',
         },
       },
       {
@@ -167,71 +131,74 @@ export const translations = {
     howItWorks: {
       title: { bm: 'Cara Ia Berfungsi', en: 'How It Works' },
       steps: [
-        { bm: 'Paparkan kod QR di majlis', en: 'Display QR code at the event' },
-        { bm: 'Tetamu imbas dengan telefon', en: 'Guests scan with their phone' },
-        { bm: 'Tulis ucapan atau muat naik foto', en: 'Write wishes or upload photos' },
+        { bm: 'Cipta event perkahwinan anda', en: 'Create your wedding event' },
+        { bm: 'Dapat kod QR unik', en: 'Get your unique QR code' },
+        { bm: 'Tetamu imbas dan kongsi', en: 'Guests scan and share' },
         { bm: 'Kenangan dikumpul secara automatik', en: 'Memories collected automatically' },
       ],
     },
   },
 
-  // Packages Section
+  // Pricing Section — New with actual prices
   packages: {
-    badge: { bm: 'Pakej Perkahwinan', en: 'Wedding Packages' },
+    badge: { bm: 'Harga & Pelan', en: 'Pricing & Plans' },
     title: {
-      bm: 'Pilih Pakej Sempurna Anda',
-      en: 'Choose Your Perfect Package',
+      bm: 'Pilih Pelan Sempurna Anda',
+      en: 'Choose Your Perfect Plan',
     },
     subtitle: {
-      bm: 'Pakej lengkap yang boleh disesuaikan mengikut keperluan dan impian anda',
-      en: 'Complete packages that can be customized according to your needs and dreams',
+      bm: 'Pelan untuk setiap pasangan. Tiada caj tersembunyi.',
+      en: 'A plan for every couple. No hidden fees.',
     },
     contactForPrice: { bm: 'Hubungi untuk harga', en: 'Contact for price' },
     popular: { bm: 'Paling Popular', en: 'Most Popular' },
-    selectPackage: { bm: 'Pilih Pakej Ini', en: 'Select This Package' },
+    selectPackage: { bm: 'Pilih Pelan Ini', en: 'Choose This Plan' },
+    perEvent: { bm: 'per event', en: 'per event' },
     basic: {
-      name: { bm: 'Pakej Asas', en: 'Basic Package' },
+      name: { bm: 'Starter', en: 'Starter' },
       description: {
-        bm: 'Sempurna untuk majlis intim dan mesra',
-        en: 'Perfect for intimate and cozy events',
+        bm: 'Semua yang anda perlukan untuk mula mengumpul kenangan',
+        en: 'Everything you need to start collecting memories',
       },
       features: [
-        { bm: 'Koordinasi hari majlis', en: 'Event day coordination' },
-        { bm: 'Dekorasi asas', en: 'Basic decoration' },
-        { bm: 'Pelamin standard', en: 'Standard dais' },
-        { bm: 'Kad QR Memoir', en: 'Memoir QR Card' },
-        { bm: 'Konsultasi 2 sesi', en: '2 consultation sessions' },
+        { bm: 'Cipta 1 event', en: 'Create 1 event' },
+        { bm: 'Kod QR unik', en: 'Unique QR code' },
+        { bm: 'Ucapan tanpa had', en: 'Unlimited wishes' },
+        { bm: 'Muat naik foto (50 foto)', en: 'Photo uploads (50 photos)' },
+        { bm: '1 template lalai', en: '1 default template' },
+        { bm: 'Aktif 30 hari', en: 'Active for 30 days' },
       ],
     },
     premium: {
-      name: { bm: 'Pakej Premium', en: 'Premium Package' },
+      name: { bm: 'Premium', en: 'Premium' },
       description: {
-        bm: 'Pilihan ideal untuk majlis yang lebih meriah',
-        en: 'Ideal choice for more festive events',
+        bm: 'Pengalaman penuh dengan pilihan personalisasi',
+        en: 'Full experience with personalization options',
       },
       features: [
-        { bm: 'Semua dalam Pakej Asas', en: 'Everything in Basic Package' },
-        { bm: 'Dekorasi premium', en: 'Premium decoration' },
-        { bm: 'Pelamin mewah', en: 'Luxury dais' },
-        { bm: 'Fotografi & Videografi', en: 'Photography & Videography' },
-        { bm: 'Memoir Premium dengan galeri penuh', en: 'Premium Memoir with full gallery' },
-        { bm: 'Doorgift eksklusif', en: 'Exclusive doorgift' },
+        { bm: 'Semua dalam Starter', en: 'Everything in Starter' },
+        { bm: 'Pelbagai template reka bentuk', en: 'Multiple design templates' },
+        { bm: 'Tukar tema & dekorasi', en: 'Change themes & decorations' },
+        { bm: 'Storan foto lebih tinggi (200 foto)', en: 'Higher photo storage (200 photos)' },
+        { bm: 'Mod tayangan slaid', en: 'Slideshow mode' },
+        { bm: 'Ucapan AI', en: 'AI-powered wishes' },
+        { bm: 'Aktif 90 hari', en: 'Active for 90 days' },
       ],
     },
     exclusive: {
-      name: { bm: 'Pakej Eksklusif', en: 'Exclusive Package' },
+      name: { bm: 'Ultimate', en: 'Ultimate' },
       description: {
-        bm: 'Pengalaman perkahwinan mewah tanpa kompromi',
-        en: 'Luxury wedding experience without compromise',
+        bm: 'Pengalaman mewah tanpa kompromi untuk hari istimewa anda',
+        en: 'Luxury experience without compromise for your special day',
       },
       features: [
-        { bm: 'Semua dalam Pakej Premium', en: 'Everything in Premium Package' },
-        { bm: 'Perancangan penuh A-Z', en: 'Full A-Z planning' },
-        { bm: 'Venue eksklusif', en: 'Exclusive venue' },
-        { bm: 'Katering 5 bintang', en: '5-star catering' },
-        { bm: 'Memoir VIP dengan ciri khas', en: 'VIP Memoir with custom features' },
-        { bm: 'Honeymoon arrangement', en: 'Honeymoon arrangement' },
-        { bm: 'Wedding planner dedicatedded', en: 'Dedicated wedding planner' },
+        { bm: 'Semua dalam Premium', en: 'Everything in Premium' },
+        { bm: 'Template sepenuhnya tersuai', en: 'Fully custom template' },
+        { bm: 'Tema warna tersuai', en: 'Custom color theme' },
+        { bm: 'Sokongan keutamaan', en: 'Priority support' },
+        { bm: 'Storan tanpa had', en: 'Unlimited storage' },
+        { bm: 'Aktif 1 tahun', en: 'Active for 1 year' },
+        { bm: 'Domain tersuai (pilihan)', en: 'Custom domain (optional)' },
       ],
     },
   },
@@ -251,53 +218,53 @@ export const translations = {
 
   // Testimonials Section
   testimonials: {
-    badge: { bm: 'Testimoni Pelanggan', en: 'Customer Testimonials' },
+    badge: { bm: 'Testimoni Pasangan', en: 'Couple Testimonials' },
     title: {
-      bm: 'Apa Kata Mereka',
-      en: 'What They Say',
+      bm: 'Dipercayai Oleh Pasangan Malaysia',
+      en: 'Trusted by Malaysian Couples',
     },
     subtitle: {
-      bm: 'Dengar pengalaman sebenar daripada pasangan yang telah kami bantu',
-      en: 'Hear real experiences from couples we have helped',
+      bm: 'Dengar pengalaman sebenar daripada pasangan yang telah menggunakan Memoir',
+      en: 'Hear real experiences from couples who have used Memoir',
     },
   },
 
   // CTA Section
   cta: {
     title: {
-      bm: 'Wujudkan Perkahwinan Impian Anda Tanpa Tekanan',
-      en: 'Create Your Dream Wedding Without Stress',
+      bm: 'Perkahwinan Anda Layak Mendapat Kenangan Yang Indah',
+      en: 'Your Wedding Deserves Beautiful Memories',
     },
     subtitle: {
-      bm: 'Hubungi kami hari ini dan mulakan perjalanan ke hari bahagia anda',
-      en: 'Contact us today and start your journey to your happy day',
+      bm: 'Sertai 500+ pasangan Malaysia yang memilih Memoir. Cipta event pertama anda hari ini.',
+      en: 'Join 500+ Malaysian couples who chose Memoir. Create your first event today.',
     },
     whatsapp: {
       bm: 'Hubungi via WhatsApp',
       en: 'Contact via WhatsApp',
     },
     planNow: {
-      bm: 'Rancang Sekarang',
-      en: 'Plan Now',
+      bm: 'Cipta Event Sekarang',
+      en: 'Create Event Now',
     },
   },
 
   // Footer
   footer: {
     description: {
-      bm: 'Perancang perkahwinan profesional yang mengubah impian anda menjadi kenyataan',
-      en: 'Professional wedding planner that turns your dreams into reality',
+      bm: 'Platform kenangan perkahwinan digital #1 di Malaysia. Cipta, kongsi, dan abadikan kenangan indah anda.',
+      en: 'Malaysia\'s #1 digital wedding memory platform. Create, share, and preserve your beautiful memories.',
     },
     quickLinks: { bm: 'Pautan Pantas', en: 'Quick Links' },
-    services: { bm: 'Perkhidmatan', en: 'Services' },
+    services: { bm: 'Ciri-ciri', en: 'Features' },
     contact: { bm: 'Hubungi', en: 'Contact' },
     followUs: { bm: 'Ikuti Kami', en: 'Follow Us' },
-    weddingPlanning: { bm: 'Perancangan Perkahwinan', en: 'Wedding Planning' },
-    eventCoordination: { bm: 'Koordinasi Majlis', en: 'Event Coordination' },
-    decoration: { bm: 'Dekorasi & Pelamin', en: 'Decoration & Dais' },
-    digitalMemories: { bm: 'Kenangan Digital', en: 'Digital Memories' },
+    qrMemories: { bm: 'Kenangan QR', en: 'QR Memories' },
+    photoGallery: { bm: 'Galeri Foto', en: 'Photo Gallery' },
+    digitalWishes: { bm: 'Ucapan Digital', en: 'Digital Wishes' },
+    aiWishes: { bm: 'Ucapan AI', en: 'AI Wishes' },
     allRightsReserved: { bm: 'Hak Cipta Terpelihara', en: 'All Rights Reserved' },
-    poweredBy: { bm: 'Dikuasakan oleh', en: 'Powered by' },
+    madeIn: { bm: 'Dibuat dengan ❤️ di Malaysia', en: 'Made with ❤️ in Malaysia' },
   },
 
   // Common

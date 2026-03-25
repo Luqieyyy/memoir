@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, ArrowRight, MessageSquare, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function CTASection() {
@@ -11,27 +11,24 @@ export default function CTASection() {
   return (
     <section id="contact" className="relative py-24 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary-800 via-secondary-900 to-secondary-950" />
-      
-      {/* Decorative elements */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-primary-500/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-dustyrose/40 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-champagne/20 rounded-full blur-3xl" />
-      </div>
-      
-      {/* Animated hearts */}
+      <div className="absolute inset-0 section-dark" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Central glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary-400/8 rounded-full blur-[150px]" />
+
+      {/* Floating hearts */}
       <motion.div
         animate={{ y: [0, -20, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-20 right-20 text-primary-400/30"
+        className="absolute top-20 right-20 text-primary-400/10"
       >
         <Heart className="w-16 h-16 fill-current" />
       </motion.div>
       <motion.div
         animate={{ y: [0, 20, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute bottom-20 left-20 text-dustyrose/30"
+        className="absolute bottom-20 left-20 text-accent-500/10"
       >
         <Heart className="w-12 h-12 fill-current" />
       </motion.div>
@@ -49,53 +46,49 @@ export default function CTASection() {
           whileInView={{ scale: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-          className="w-20 h-20 bg-gradient-to-br from-primary-400 to-dustyrose rounded-full flex items-center justify-center mx-auto mb-8 shadow-elegant"
+          className="w-20 h-20 bg-gradient-to-br from-primary-400 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow animate-glow-pulse"
         >
-          <Sparkles className="w-10 h-10 text-white" />
+          <Sparkles className="w-10 h-10 text-secondary-950" />
         </motion.div>
 
         {/* Main Headline */}
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6 leading-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-ivory mb-6 leading-tight">
           {language === 'bm'
-            ? 'Wujudkan Perkahwinan Impian Anda Tanpa Tekanan'
-            : 'Create Your Dream Wedding Without Stress'}
+            ? 'Perkahwinan Anda Layak Mendapat Kenangan Yang Indah'
+            : 'Your Wedding Deserves Beautiful Memories'}
         </h2>
 
         {/* Subtitle */}
-        <p className="text-xl text-secondary-300 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
           {language === 'bm'
-            ? 'Hubungi kami hari ini dan mulakan perjalanan ke hari bahagia anda'
-            : 'Contact us today and start your journey to your happy day'}
+            ? 'Sertai 500+ pasangan Malaysia yang memilih Memoir. Cipta event pertama anda hari ini.'
+            : 'Join 500+ Malaysian couples who chose Memoir. Create your first event today.'}
         </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="https://wa.me/60176457094"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-semibold hover:shadow-elegant transition-all hover:scale-105"
+            href="/register"
+            className="group inline-flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-primary-400 to-accent-500 text-secondary-950 rounded-xl font-bold text-lg hover:shadow-glow transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <MessageSquare className="w-5 h-5" />
-            {language === 'bm' ? 'Hubungi via WhatsApp' : 'Contact via WhatsApp'}
+            {language === 'bm' ? 'Cipta Event Sekarang' : 'Create Event Now'}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
-            href="#packages"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-full font-semibold hover:bg-white/20 transition-all border border-white/20 hover:border-white/40"
+            href="#pricing"
+            className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-white/5 backdrop-blur-sm text-ivory rounded-xl font-semibold text-lg border border-white/10 hover:bg-white/10 hover:border-primary-400/30 transition-all"
           >
-            {language === 'bm' ? 'Lihat Pakej Kami' : 'View Our Packages'}
+            {language === 'bm' ? 'Lihat Pelan & Harga' : 'View Plans & Pricing'}
           </Link>
         </div>
 
-        {/* Contact Info */}
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <p className="text-secondary-400 mb-2">
-            {language === 'bm' ? 'Hubungi terus:' : 'Direct contact:'}
-          </p>
-          <p className="text-white font-medium">
-            <span className="text-primary-300">Aisyah</span> — 017-645 7094
-          </p>
+        {/* Bottom micro-copy */}
+        <div className="mt-8 flex items-center justify-center gap-4 text-sm text-muted">
+          <span>{language === 'bm' ? 'Daftar percuma' : 'Free to sign up'}</span>
+          <div className="w-1 h-1 rounded-full bg-muted" />
+          <span>{language === 'bm' ? 'Bayar bila dah sedia' : 'Pay when you\'re ready'}</span>
+          <div className="w-1 h-1 rounded-full bg-muted" />
+          <span>🇲🇾</span>
         </div>
 
         {/* Decorative line */}
@@ -104,7 +97,7 @@ export default function CTASection() {
           whileInView={{ width: '100%' }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="h-px bg-gradient-to-r from-transparent via-primary-400 to-transparent mt-12 max-w-lg mx-auto"
+          className="h-px bg-gradient-to-r from-transparent via-primary-400/20 to-transparent mt-12 max-w-lg mx-auto"
         />
       </motion.div>
     </section>

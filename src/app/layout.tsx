@@ -4,17 +4,17 @@ import { AuthProvider } from '@/contexts';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Memoir - Capture Your Wedding Memories',
+  title: 'Memoir — Where Wedding Memories Come Alive',
   description:
-    'A beautiful wedding memory app where guests can share wishes, photos, and memories with the happy couple via QR code.',
-  keywords: ['wedding', 'memories', 'photos', 'wishes', 'QR code', 'celebration'],
+    'Malaysia\'s #1 digital wedding memory platform. Guests scan a QR code to share wishes, photos, and heartfelt messages — all collected in one beautiful place.',
+  keywords: ['wedding', 'memories', 'QR code', 'Malaysia', 'digital wishes', 'photo gallery', 'wedding tech'],
   authors: [{ name: 'Memoir' }],
   openGraph: {
-    title: 'Memoir - Capture Your Wedding Memories',
+    title: 'Memoir — Where Wedding Memories Come Alive',
     description:
-      'A beautiful wedding memory app where guests can share wishes, photos, and memories with the happy couple.',
+      'The modern way Malaysian couples capture wedding memories. One QR code, endless beautiful moments.',
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_MY',
   },
 };
 
@@ -28,9 +28,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#d4856a" />
+        <meta name="theme-color" content="#1A1625" />
       </head>
-      <body className="min-h-screen bg-cream">
+      <body className="min-h-screen bg-secondary-950">
         <AuthProvider>
           {children}
           <Toaster
@@ -38,22 +38,23 @@ export default function RootLayout({
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#fff',
-                color: '#343b47',
-                boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.1)',
+                background: '#241F31',
+                color: '#F5F0EB',
+                boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.3)',
                 borderRadius: '12px',
                 padding: '16px',
+                border: '1px solid rgba(255,255,255,0.1)',
               },
               success: {
                 iconTheme: {
-                  primary: '#d4856a',
-                  secondary: '#fff',
+                  primary: '#E8B4B8',
+                  secondary: '#1A1625',
                 },
               },
               error: {
                 iconTheme: {
                   primary: '#ef4444',
-                  secondary: '#fff',
+                  secondary: '#1A1625',
                 },
               },
             }}

@@ -7,10 +7,11 @@ import { useAuthContext } from '@/contexts';
 import { useEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
 import { QRCodeDisplay } from '@/components/events';
 import { RSVPDashboard, MemoryWall, DEFAULT_WEDDING_TIMELINE } from '@/components/wedding';
-import { AppearanceEditor, TimelineEditor, MusicSettings } from '@/components/dashboard';
+import { AppearanceEditor, TimelineEditor, MusicSettings, BackgroundEditor } from '@/components/dashboard';
 import { Button, Card, Badge, Spinner, Modal, Skeleton, EmptyState } from '@/components/ui';
 import { formatDate, getDaysUntil, isDateInPast, isToday } from '@/lib/utils';
-import { TimelineEvent, BackgroundMusic } from '@/types';
+import { TimelineEvent, BackgroundMusic, SectionBackgrounds } from '@/types';
+import { uploadBackgroundImage } from '@/lib/firebase';
 import {
   ArrowLeft,
   Calendar,
@@ -29,7 +30,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type TabType = 'qrcode' | 'rsvp' | 'timeline' | 'memories' | 'music' | 'appearance';
+type TabType = 'qrcode' | 'rsvp' | 'timeline' | 'memories' | 'music' | 'backgrounds' | 'appearance';
 
 // Custom Music Icon
 const MusicIcon = () => (
@@ -37,6 +38,15 @@ const MusicIcon = () => (
     <path d="M9 18V5l12-2v13" />
     <circle cx="6" cy="18" r="3" fill="currentColor" />
     <circle cx="18" cy="16" r="3" fill="currentColor" />
+  </svg>
+);
+
+// Custom ImageStack Icon for backgrounds
+const ImageStackIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21,15 16,10 5,21" />
   </svg>
 );
 
@@ -154,12 +164,21 @@ export default function EventDetailPage() {
     { key: 'timeline', label: 'Aturcara', icon: <Clock className="w-4 h-4" /> },
     { key: 'memories', label: 'Kenangan', icon: <Heart className="w-4 h-4" />, count: (stats?.totalWishes || 0) + (stats?.totalPhotos || 0) },
     { key: 'music', label: 'Muzik', icon: <MusicIcon /> },
+    { key: 'backgrounds', label: 'Gambar Latar', icon: <ImageStackIcon /> },
     { key: 'appearance', label: 'Reka Bentuk', icon: <Sparkles className="w-4 h-4" /> },
   ];
 
   const handleUpdateMusic = async (musicSettings: BackgroundMusic) => {
     try {
       await update({ backgroundMusic: musicSettings });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const handleUpdateBackgrounds = async (sectionBackgrounds: SectionBackgrounds) => {
+    try {
+      await update({ sectionBackgrounds });
     } catch (err) {
       throw err;
     }
@@ -375,6 +394,19 @@ export default function EventDetailPage() {
             <MusicSettings
               initialSettings={event.backgroundMusic}
               onSave={handleUpdateMusic}
+            />
+          </div>
+        )}
+
+        {activeTab === 'backgrounds' && (
+          <div className="max-w-3xl mx-auto">
+            <BackgroundEditor
+              initialBackgrounds={event.sectionBackgrounds}
+              onSave={handleUpdateBackgrounds}
+              onUploadImage={async (file) => {
+                const url = await uploadBackgroundImage(eventId, file);
+                return url;
+              }}
             />
           </div>
         )}

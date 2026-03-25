@@ -2,14 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Heart } from 'lucide-react';
-
-// Custom Star icon component
-const StarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-);
+import { Check, X, Sparkles, Crown, Zap } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function PackagesSection() {
@@ -17,52 +10,79 @@ export default function PackagesSection() {
 
   const packages = [
     {
-      name: language === 'bm' ? 'Pakej Asas' : 'Basic Package',
+      name: 'Starter',
+      nameBm: 'Starter',
+      price: 15,
       description: language === 'bm'
-        ? 'Sempurna untuk majlis intim dan mesra'
-        : 'Perfect for intimate and cozy events',
+        ? 'Semua yang anda perlukan untuk mula mengumpul kenangan'
+        : 'Everything you need to start collecting memories',
       features: [
-        language === 'bm' ? 'Koordinasi hari majlis' : 'Event day coordination',
-        language === 'bm' ? 'Dekorasi asas' : 'Basic decoration',
-        language === 'bm' ? 'Pelamin standard' : 'Standard dais',
-        language === 'bm' ? 'Kad QR Memoir' : 'Memoir QR Card',
-        language === 'bm' ? 'Konsultasi 2 sesi' : '2 consultation sessions',
+        { text: language === 'bm' ? 'Cipta 1 event' : 'Create 1 event', included: true },
+        { text: language === 'bm' ? 'Kod QR unik' : 'Unique QR code', included: true },
+        { text: language === 'bm' ? 'Ucapan tanpa had' : 'Unlimited wishes', included: true },
+        { text: language === 'bm' ? 'Muat naik foto (50 foto)' : 'Photo uploads (50 photos)', included: true },
+        { text: language === 'bm' ? '1 template lalai' : '1 default template', included: true },
+        { text: language === 'bm' ? 'Aktif 30 hari' : 'Active for 30 days', included: true },
+        { text: language === 'bm' ? 'Pelbagai template' : 'Multiple templates', included: false },
+        { text: language === 'bm' ? 'Mod tayangan slaid' : 'Slideshow mode', included: false },
       ],
       popular: false,
-      icon: Sparkles,
+      icon: Zap,
+      gradient: 'from-muted to-muted',
+      borderColor: 'border-white/10',
+      ctaStyle: 'bg-white/10 text-ivory hover:bg-white/20 border border-white/10',
+      subtitleBm: 'Sesuai untuk majlis intim',
+      subtitleEn: 'Perfect for intimate events',
     },
     {
-      name: language === 'bm' ? 'Pakej Premium' : 'Premium Package',
+      name: 'Premium',
+      nameBm: 'Premium',
+      price: 50,
       description: language === 'bm'
-        ? 'Pilihan ideal untuk majlis yang lebih meriah'
-        : 'Ideal choice for more festive events',
+        ? 'Pengalaman penuh dengan pilihan personalisasi'
+        : 'Full experience with personalization options',
       features: [
-        language === 'bm' ? 'Semua dalam Pakej Asas' : 'Everything in Basic Package',
-        language === 'bm' ? 'Dekorasi premium' : 'Premium decoration',
-        language === 'bm' ? 'Pelamin mewah' : 'Luxury dais',
-        language === 'bm' ? 'Fotografi & Videografi' : 'Photography & Videography',
-        language === 'bm' ? 'Memoir Premium dengan galeri penuh' : 'Premium Memoir with full gallery',
-        language === 'bm' ? 'Doorgift eksklusif' : 'Exclusive doorgift',
+        { text: language === 'bm' ? 'Semua dalam Starter' : 'Everything in Starter', included: true },
+        { text: language === 'bm' ? 'Pelbagai template reka bentuk' : 'Multiple design templates', included: true },
+        { text: language === 'bm' ? 'Tukar tema & dekorasi' : 'Change themes & decorations', included: true },
+        { text: language === 'bm' ? 'Storan foto (200 foto)' : 'Photo storage (200 photos)', included: true },
+        { text: language === 'bm' ? 'Mod tayangan slaid' : 'Slideshow mode', included: true },
+        { text: language === 'bm' ? 'Ucapan AI pintar' : 'Smart AI wishes', included: true },
+        { text: language === 'bm' ? 'Aktif 90 hari' : 'Active for 90 days', included: true },
+        { text: language === 'bm' ? 'Domain tersuai' : 'Custom domain', included: false },
       ],
       popular: true,
-      icon: StarIcon,
+      icon: Sparkles,
+      gradient: 'from-primary-400 to-accent-500',
+      borderColor: 'border-primary-400/30',
+      ctaStyle: 'bg-gradient-to-r from-primary-400 to-accent-500 text-secondary-950 hover:shadow-glow',
+      subtitleBm: 'Pilihan paling popular',
+      subtitleEn: 'Most popular choice',
     },
     {
-      name: language === 'bm' ? 'Pakej Eksklusif' : 'Exclusive Package',
+      name: 'Ultimate',
+      nameBm: 'Ultimate',
+      price: 150,
       description: language === 'bm'
-        ? 'Pengalaman perkahwinan mewah tanpa kompromi'
-        : 'Luxury wedding experience without compromise',
+        ? 'Pengalaman mewah tanpa kompromi'
+        : 'Luxury experience without compromise',
       features: [
-        language === 'bm' ? 'Semua dalam Pakej Premium' : 'Everything in Premium Package',
-        language === 'bm' ? 'Perancangan penuh A-Z' : 'Full A-Z planning',
-        language === 'bm' ? 'Venue eksklusif' : 'Exclusive venue',
-        language === 'bm' ? 'Katering 5 bintang' : '5-star catering',
-        language === 'bm' ? 'Memoir VIP dengan ciri khas' : 'VIP Memoir with custom features',
-        language === 'bm' ? 'Honeymoon arrangement' : 'Honeymoon arrangement',
-        language === 'bm' ? 'Wedding planner dedicated' : 'Dedicated wedding planner',
+        { text: language === 'bm' ? 'Semua dalam Premium' : 'Everything in Premium', included: true },
+        { text: language === 'bm' ? 'Template sepenuhnya tersuai' : 'Fully custom template', included: true },
+        { text: language === 'bm' ? 'Tema warna tersuai' : 'Custom color theme', included: true },
+        { text: language === 'bm' ? 'Sokongan keutamaan' : 'Priority support', included: true },
+        { text: language === 'bm' ? 'Storan tanpa had' : 'Unlimited storage', included: true },
+        { text: language === 'bm' ? 'Aktif 1 tahun' : 'Active for 1 year', included: true },
+        { text: language === 'bm' ? 'Domain tersuai' : 'Custom domain (optional)', included: true },
+        { text: language === 'bm' ? 'Muzik YouTube' : 'YouTube music integration', included: true },
       ],
       popular: false,
-      icon: Sparkles,
+      icon: Crown,
+      gradient: 'from-accent-500 to-accent-400',
+      borderColor: 'border-accent-500/20',
+      ctaStyle: 'bg-white/10 text-ivory hover:bg-white/20 border border-accent-500/30',
+      subtitleBm: 'Untuk pasangan yang mahu segalanya',
+      subtitleEn: 'For couples who want it all',
     },
   ];
 
@@ -80,11 +100,14 @@ export default function PackagesSection() {
   };
 
   return (
-    <section id="packages" className="relative py-24 overflow-hidden">
+    <section id="pricing" className="relative py-24 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-champagne/20 to-white" />
-      <div className="absolute top-20 left-20 w-64 h-64 bg-primary-200/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-blush/30 rounded-full blur-3xl" />
+      <div className="absolute inset-0 section-dark" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Ambient glows */}
+      <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-primary-400/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-accent-500/5 rounded-full blur-[120px]" />
 
       <motion.div
         variants={containerVariants}
@@ -94,105 +117,136 @@ export default function PackagesSection() {
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         {/* Section Header */}
-        <motion.div variants={cardVariants} className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-primary-700 text-sm font-medium mb-4 shadow-soft border border-champagne/50">
-            {language === 'bm' ? 'Pakej Perkahwinan' : 'Wedding Packages'}
+        <motion.div variants={cardVariants} className="text-center mb-16 max-w-3xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full text-accent-500 text-sm font-medium mb-6 border border-white/10">
+            {language === 'bm' ? 'Harga Mudah & Telus' : 'Simple & Transparent Pricing'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-secondary-800 mb-4">
-            {language === 'bm' ? 'Pilih Pakej Sempurna Anda' : 'Choose Your Perfect Package'}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-ivory mb-6">
+            {language === 'bm' ? (
+              <>Pelan Untuk <span className="text-gradient-gold">Setiap Pasangan</span></>
+            ) : (
+              <>A Plan For <span className="text-gradient-gold">Every Couple</span></>
+            )}
           </h2>
-          <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted">
             {language === 'bm'
-              ? 'Pakej lengkap yang boleh disesuaikan mengikut keperluan dan impian anda'
-              : 'Complete packages that can be customized according to your needs and dreams'}
+              ? 'Tiada caj tersembunyi. Bayar sekali, gunakan untuk event anda.'
+              : 'No hidden fees. Pay once, use for your event.'}
           </p>
         </motion.div>
 
-        {/* Packages Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Pricing Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
           {packages.map((pkg, index) => (
             <motion.div
               key={index}
               variants={cardVariants}
-              className={`relative group bg-white rounded-3xl overflow-hidden transition-all duration-500 ${
-                pkg.popular
-                  ? 'shadow-elegant ring-2 ring-primary-400 scale-[1.02]'
-                  : 'shadow-soft hover:shadow-elegant'
-              }`}
+              className={`relative group ${pkg.popular ? 'lg:-mt-4 lg:mb-4' : ''}`}
             >
               {/* Popular Badge */}
               {pkg.popular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary-500 to-dustyrose text-white text-center py-2 text-sm font-medium">
-                  <StarIcon className="w-4 h-4 inline-block mr-1" />
-                  {language === 'bm' ? 'Paling Popular' : 'Most Popular'}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                  <div className="px-6 py-2 bg-gradient-to-r from-primary-400 to-accent-500 text-secondary-950 text-sm font-bold rounded-full shadow-glow flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    {language === 'bm' ? 'Paling Popular' : 'Most Popular'}
+                  </div>
                 </div>
               )}
 
-              <div className={`p-8 ${pkg.popular ? 'pt-14' : ''}`}>
-                {/* Icon */}
-                <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-                    pkg.popular
-                      ? 'bg-gradient-to-br from-primary-400 to-dustyrose'
-                      : 'bg-gradient-to-br from-champagne to-primary-100'
-                  }`}
-                >
-                  <pkg.icon className={`w-7 h-7 ${pkg.popular ? 'text-white' : 'text-primary-600'}`} />
+              <div className={`glass-card ${pkg.borderColor} overflow-hidden transition-all duration-500 ${pkg.popular
+                ? 'ring-1 ring-primary-400/30 shadow-glow'
+                : 'hover:border-white/20'
+                }`}>
+                <div className={`p-8 ${pkg.popular ? 'pt-10' : ''}`}>
+                  {/* Icon & Name */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${pkg.gradient} flex items-center justify-center shadow-lg`}>
+                      <pkg.icon className={`w-6 h-6 ${pkg.popular ? 'text-secondary-950' : 'text-secondary-950'}`} />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-bold text-xl text-ivory">
+                        {pkg.name}
+                      </h3>
+                      <p className="text-xs text-muted">
+                        {language === 'bm' ? pkg.subtitleBm : pkg.subtitleEn}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mb-6">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-sm text-muted font-medium">RM</span>
+                      <span className={`text-5xl font-display font-bold ${pkg.popular ? 'text-gradient' : 'text-ivory'
+                        }`}>
+                        {pkg.price}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted mt-1">
+                      {language === 'bm' ? 'per event' : 'per event'}
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-muted mb-6 leading-relaxed">
+                    {pkg.description}
+                  </p>
+
+                  {/* Features */}
+                  <ul className="space-y-3 mb-8">
+                    {pkg.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        {feature.included ? (
+                          <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${pkg.gradient} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                            <Check className="w-3 h-3 text-secondary-950" />
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <X className="w-3 h-3 text-muted/30" />
+                          </div>
+                        )}
+                        <span className={`text-sm ${feature.included ? 'text-ivory/80' : 'text-muted/40'}`}>
+                          {feature.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA Button */}
+                  <Link
+                    href="/register"
+                    className={`block w-full py-4 rounded-xl text-center font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] ${pkg.ctaStyle}`}
+                  >
+                    {language === 'bm' ? 'Pilih Pelan Ini' : 'Choose This Plan'}
+                  </Link>
                 </div>
-
-                {/* Name & Description */}
-                <h3 className="font-display font-bold text-2xl text-secondary-800 mb-2">
-                  {pkg.name}
-                </h3>
-                <p className="text-secondary-500 mb-6">{pkg.description}</p>
-
-                {/* Price Placeholder */}
-                <div className="mb-6">
-                  <span className="text-sm text-secondary-400">
-                    {language === 'bm' ? 'Hubungi untuk harga' : 'Contact for price'}
-                  </span>
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-3 mb-8">
-                  {pkg.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-3">
-                      <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                          pkg.popular
-                            ? 'bg-primary-100 text-primary-600'
-                            : 'bg-champagne/50 text-primary-600'
-                        }`}
-                      >
-                        <Check className="w-3 h-3" />
-                      </div>
-                      <span className="text-secondary-600 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA Button */}
-                <Link
-                  href="https://wa.me/60176457094"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`block w-full py-4 rounded-xl text-center font-semibold transition-all ${
-                    pkg.popular
-                      ? 'bg-gradient-to-r from-primary-500 to-dustyrose text-white hover:shadow-elegant hover:scale-[1.02]'
-                      : 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200'
-                  }`}
-                >
-                  {language === 'bm' ? 'Pilih Pakej Ini' : 'Select This Package'}
-                </Link>
               </div>
-
-              {/* Decorative corner */}
-              {pkg.popular && (
-                <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-gradient-to-br from-primary-100/50 to-blush/50 rounded-full" />
-              )}
             </motion.div>
           ))}
         </div>
+
+        {/* Bottom trust note */}
+        <motion.div
+          variants={cardVariants}
+          className="mt-12 text-center"
+        >
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-muted">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-mint" />
+              <span>{language === 'bm' ? 'Pembayaran selamat via Billplz' : 'Secure payment via Billplz'}</span>
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary-400" />
+              <span>{language === 'bm' ? 'Tiada langganan — bayar sekali' : 'No subscription — pay once'}</span>
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-accent-500" />
+              <span>{language === 'bm' ? 'Sokongan 24/7' : '24/7 support'}</span>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );

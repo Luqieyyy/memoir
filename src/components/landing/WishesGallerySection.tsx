@@ -1,11 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Heart, Camera, MessageSquare, Quote } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-// Mock data for wishes and photos - will be replaced with Firestore data
+// Mock data for wishes
 const mockWishes = [
   {
     id: 1,
@@ -22,7 +21,7 @@ const mockWishes = [
   {
     id: 3,
     name: 'Sarah & Hafiz',
-    message: 'Barakallahu lakuma wa baraka \'alaikuma. Semoga berkekalan 🤍',
+    message: "Barakallahu lakuma wa baraka 'alaikuma. Semoga berkekalan 🤍",
     type: 'wish',
   },
   {
@@ -32,27 +31,6 @@ const mockWishes = [
     type: 'wish',
   },
 ];
-
-// Use actual wedding photos from public folder
-const weddingPhotos = [
-  { id: 1, src: '/weddingpic/weddingpic_1.jpg', aspectRatio: 'tall' },
-  { id: 2, src: '/weddingpic/weddingpic_2.jpg', aspectRatio: 'square' },
-  { id: 3, src: '/weddingpic/weddingpic_3.jpg', aspectRatio: 'wide' },
-  { id: 4, src: '/weddingpic/weddingpic_4.jpg', aspectRatio: 'square' },
-  { id: 5, src: '/weddingpic/weddingpic_5.jpg', aspectRatio: 'tall' },
-  { id: 6, src: '/weddingpic/weddingpic_6.jpg', aspectRatio: 'square' },
-];
-
-const getAspectClass = (ratio: string) => {
-  switch (ratio) {
-    case 'tall':
-      return 'row-span-2';
-    case 'wide':
-      return 'col-span-2';
-    default:
-      return '';
-  }
-};
 
 export default function WishesGallerySection() {
   const { language } = useLanguage();
@@ -73,9 +51,12 @@ export default function WishesGallerySection() {
   return (
     <section id="gallery" className="relative py-24 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cream via-white to-cream" />
-      <div className="absolute top-20 right-10 w-80 h-80 bg-blush/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-64 h-64 bg-champagne/40 rounded-full blur-3xl" />
+      <div className="absolute inset-0 section-darker" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Ambient glows */}
+      <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-primary-400/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-20 left-10 w-[300px] h-[300px] bg-accent-500/5 rounded-full blur-[100px]" />
 
       <motion.div
         variants={containerVariants}
@@ -86,93 +67,97 @@ export default function WishesGallerySection() {
       >
         {/* Section Header */}
         <motion.div variants={itemVariants} className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-primary-700 text-sm font-medium mb-4 shadow-soft border border-champagne/50">
-            <Heart className="w-4 h-4" />
-            {language === 'bm' ? 'Kenangan Indah' : 'Beautiful Memories'}
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full text-primary-400 text-sm font-medium mb-6 border border-white/10">
+            <Heart className="w-4 h-4 fill-current" />
+            {language === 'bm' ? 'Preview Ucapan' : 'Wishes Preview'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-secondary-800 mb-4">
-            {language === 'bm' ? 'Ucapan & Momen Istimewa' : 'Wishes & Special Moments'}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-ivory mb-6">
+            {language === 'bm' ? (
+              <>Ucapan & <span className="text-gradient">Momen Istimewa</span></>
+            ) : (
+              <>Wishes & <span className="text-gradient">Special Moments</span></>
+            )}
           </h2>
-          <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted max-w-2xl mx-auto">
             {language === 'bm'
-              ? 'Lihat bagaimana tetamu berkongsi cinta dan kegembiraan mereka'
-              : 'See how guests share their love and joy'}
+              ? 'Lihat contoh bagaimana tetamu berkongsi cinta dan kegembiraan mereka melalui Memoir'
+              : 'See examples of how guests share their love and joy through Memoir'}
           </p>
         </motion.div>
 
-        {/* Masonry Gallery */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px]">
+        {/* Wishes + Photos Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Wishes Cards */}
           {mockWishes.map((wish, index) => (
             <motion.div
               key={`wish-${wish.id}`}
               variants={itemVariants}
-              className={`group bg-white rounded-2xl p-5 shadow-soft hover:shadow-elegant transition-all duration-300 border border-champagne/30 hover:border-primary-300 overflow-hidden ${
-                index === 0 ? 'row-span-2' : ''
-              }`}
+              className="group glass-card-hover p-6 overflow-hidden"
             >
               <div className="h-full flex flex-col">
-                <Quote className="w-6 h-6 text-primary-300 mb-3 flex-shrink-0" />
-                <p className="text-secondary-700 text-sm leading-relaxed flex-1 overflow-hidden">
+                <Quote className="w-6 h-6 text-primary-400/50 mb-3 flex-shrink-0" />
+                <p className="text-ivory/70 text-sm leading-relaxed flex-1 overflow-hidden">
                   {wish.message}
                 </p>
-                <div className="mt-4 pt-3 border-t border-champagne/50 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary-200 to-blush rounded-full flex items-center justify-center">
-                    <MessageSquare className="w-4 h-4 text-primary-600" />
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-primary-400/20 to-accent-500/20 rounded-full flex items-center justify-center border border-white/10">
+                    <MessageSquare className="w-4 h-4 text-primary-400" />
                   </div>
-                  <span className="text-xs font-medium text-secondary-600">{wish.name}</span>
+                  <span className="text-xs font-medium text-muted">{wish.name}</span>
                 </div>
               </div>
             </motion.div>
           ))}
 
-          {/* Photo Gallery with actual images */}
-          {weddingPhotos.map((photo) => (
+          {/* Photo placeholder cards */}
+          {[1, 2, 3, 4].map((i) => (
             <motion.div
-              key={`photo-${photo.id}`}
+              key={`photo-${i}`}
               variants={itemVariants}
-              className={`group relative rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-300 ${getAspectClass(
-                photo.aspectRatio
-              )}`}
+              className="group glass-card overflow-hidden aspect-square relative"
             >
-              {/* Actual wedding photo */}
-              <Image
-                src={photo.src}
-                alt={`Wedding photo ${photo.id}`}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              
+              {/* Gradient placeholder */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${i === 1 ? 'from-primary-400/15 to-accent-500/10' :
+                  i === 2 ? 'from-accent-500/15 to-primary-400/10' :
+                    i === 3 ? 'from-mint/15 to-primary-300/10' :
+                      'from-primary-300/15 to-accent-400/10'
+                }`} />
+
               {/* Hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              {/* Heart animation on hover */}
-              <div className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Heart className="w-4 h-4 text-primary-500 fill-primary-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-secondary-950/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Camera icon */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Camera className="w-8 h-8 text-white/20 group-hover:text-white/40 transition-colors" />
+              </div>
+
+              {/* Heart on hover */}
+              <div className="absolute top-3 right-3 w-8 h-8 bg-white/5 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-white/10">
+                <Heart className="w-4 h-4 text-primary-400 fill-primary-400" />
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Instagram-style interaction hints */}
+        {/* Stats bar */}
         <motion.div
           variants={itemVariants}
           className="mt-12 text-center"
         >
-          <div className="inline-flex items-center gap-4 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full shadow-soft border border-champagne/50">
-            <div className="flex items-center gap-1 text-primary-600">
+          <div className="inline-flex items-center gap-6 px-8 py-4 glass-card rounded-full">
+            <div className="flex items-center gap-2 text-primary-400">
               <Heart className="w-5 h-5 fill-current" />
-              <span className="text-sm font-medium">128</span>
+              <span className="text-sm font-semibold text-ivory">128</span>
             </div>
-            <div className="w-px h-5 bg-champagne" />
-            <div className="flex items-center gap-1 text-secondary-500">
+            <div className="w-px h-5 bg-white/10" />
+            <div className="flex items-center gap-2 text-accent-500">
               <Camera className="w-5 h-5" />
-              <span className="text-sm font-medium">56</span>
+              <span className="text-sm font-semibold text-ivory">56</span>
             </div>
-            <div className="w-px h-5 bg-champagne" />
-            <div className="flex items-center gap-1 text-secondary-500">
+            <div className="w-px h-5 bg-white/10" />
+            <div className="flex items-center gap-2 text-mint">
               <MessageSquare className="w-5 h-5" />
-              <span className="text-sm font-medium">89</span>
+              <span className="text-sm font-semibold text-ivory">89</span>
             </div>
           </div>
         </motion.div>

@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Users, Calendar, Camera } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StatItem {
     icon: React.ReactNode;
     value: number;
-    label: string;
+    labelBm: string;
+    labelEn: string;
     suffix?: string;
     prefix?: string;
 }
@@ -46,25 +48,29 @@ const defaultStats: StatItem[] = [
     {
         icon: <Heart className="w-6 h-6" />,
         value: 500,
-        label: 'Pasangan Bahagia',
+        labelBm: 'Pasangan Gembira',
+        labelEn: 'Happy Couples',
         suffix: '+',
     },
     {
         icon: <Users className="w-6 h-6" />,
         value: 25000,
-        label: 'Tetamu Dijemput',
+        labelBm: 'Tetamu Berkongsi',
+        labelEn: 'Guests Shared',
         suffix: '+',
     },
     {
         icon: <Calendar className="w-6 h-6" />,
         value: 1200,
-        label: 'Majlis Tercipta',
+        labelBm: 'Event Dicipta',
+        labelEn: 'Events Created',
         suffix: '+',
     },
     {
         icon: <Camera className="w-6 h-6" />,
         value: 50000,
-        label: 'Foto Dikongsi',
+        labelBm: 'Foto Dikumpul',
+        labelEn: 'Photos Collected',
         suffix: '+',
     },
 ];
@@ -98,24 +104,15 @@ export const AnimatedStatsBanner: React.FC<AnimatedStatsBannerProps> = ({
             ref={ref}
             className={`relative py-16 overflow-hidden ${className}`}
         >
-            {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600" />
+            {/* Background — dark gradient with rose-gold accents */}
+            <div className="absolute inset-0 bg-gradient-to-r from-secondary-950 via-secondary-900 to-secondary-950" />
 
-            {/* Decorative elements */}
-            <div className="absolute inset-0 opacity-10">
-                {[...Array(20)].map((_, i) => (
-                    <Heart
-                        key={i}
-                        className="absolute text-white"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            width: `${20 + Math.random() * 30}px`,
-                            transform: `rotate(${Math.random() * 360}deg)`,
-                        }}
-                    />
-                ))}
-            </div>
+            {/* Top & bottom borders */}
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-400/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-400/20 to-transparent" />
+
+            {/* Ambient glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-primary-400/5 rounded-full blur-[100px]" />
 
             <div className="relative max-w-6xl mx-auto px-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -142,6 +139,7 @@ interface StatCardProps {
 const StatCard: React.FC<StatCardProps> = ({ stat, isVisible, delay }) => {
     const [shouldAnimate, setShouldAnimate] = useState(false);
     const count = useCountUp(stat.value, 2000, shouldAnimate);
+    const { language } = useLanguage();
 
     useEffect(() => {
         if (isVisible) {
@@ -162,16 +160,16 @@ const StatCard: React.FC<StatCardProps> = ({ stat, isVisible, delay }) => {
             className={`text-center transition-all duration-700 ${shouldAnimate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
         >
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/20 text-white mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-400/10 text-primary-400 mb-4 border border-primary-400/10">
                 {stat.icon}
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+            <div className="text-3xl md:text-4xl font-display font-bold text-ivory mb-1">
                 {stat.prefix}
                 {formatNumber(count)}
                 {stat.suffix}
             </div>
-            <div className="text-sm text-white/80">
-                {stat.label}
+            <div className="text-sm text-muted">
+                {language === 'bm' ? stat.labelBm : stat.labelEn}
             </div>
         </div>
     );

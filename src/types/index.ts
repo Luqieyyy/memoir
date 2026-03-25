@@ -29,6 +29,7 @@ export interface WeddingEvent {
   isActive: boolean;
   timeline?: TimelineEvent[];
   backgroundMusic?: BackgroundMusic;
+  sectionBackgrounds?: SectionBackgrounds;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,6 +70,36 @@ export interface UpdateEventInput {
   isActive?: boolean;
   timeline?: TimelineEvent[];
   backgroundMusic?: BackgroundMusic;
+  sectionBackgrounds?: SectionBackgrounds;
+}
+
+// ============================================
+// SECTION BACKGROUND TYPES
+// ============================================
+
+export interface BackgroundImage {
+  id: string;
+  url: string;
+  alt?: string;
+}
+
+export interface SectionBackgroundConfig {
+  enabled: boolean;
+  images: BackgroundImage[];
+  opacity: number; // 0-100
+  layout: 'single' | 'carousel' | 'parallax' | 'slideshow';
+  overlayColor: string; // hex color
+  overlayOpacity: number; // 0-100
+  autoScroll: boolean;
+  scrollSpeed: number; // 1-10
+}
+
+export interface SectionBackgrounds {
+  hero?: SectionBackgroundConfig;
+  rsvp?: SectionBackgroundConfig;
+  timeline?: SectionBackgroundConfig;
+  memories?: SectionBackgroundConfig;
+  share?: SectionBackgroundConfig;
 }
 
 // ============================================

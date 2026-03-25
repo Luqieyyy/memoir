@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* Import Google Fonts — Midnight Bloom Theme */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   html {
@@ -11,7 +11,8 @@
   }
 
   body {
-    @apply font-body text-secondary-800 antialiased;
+    @apply font-body text-ivory antialiased;
+    background-color: #1A1625;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -22,37 +23,94 @@
 @layer components {
   /* Custom focus styles */
   .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-secondary-950;
   }
 
-  /* Glass effect */
+  /* Glass morphism card */
   .glass {
-    @apply bg-white/80 backdrop-blur-md;
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
 
-  /* Wedding-themed gradient text */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card hover:bg-white/10 hover:border-primary-400/30 transition-all duration-500;
+  }
+
+  /* Gradient text — Rose Gold */
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 via-primary-500 to-dustyrose bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-400 via-primary-300 to-accent-500 bg-clip-text text-transparent;
   }
 
   /* Gold gradient text */
   .text-gradient-gold {
-    @apply bg-gradient-to-r from-gold-500 via-gold-400 to-champagne bg-clip-text text-transparent;
-  }
-
-  /* Decorative flower pattern */
-  .wedding-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23f5ddd3' fill-opacity='0.2'%3E%3Cpath d='M40 40c0-11.046-8.954-20-20-20S0 28.954 0 40s8.954 20 20 20 20-8.954 20-20zm40 0c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zM20 80c11.046 0 20-8.954 20-20S31.046 40 20 40 0 48.954 0 60s8.954 20 20 20zm40 0c11.046 0 20-8.954 20-20s-8.954-20-20-20-20 8.954-20 20 8.954 20 20 20z'/%3E%3C/g%3E%3C/svg%3E");
+    @apply bg-gradient-to-r from-accent-500 via-accent-400 to-accent-300 bg-clip-text text-transparent;
   }
 
   /* Premium card styles */
   .card-premium {
-    @apply bg-white rounded-2xl shadow-soft border border-champagne/30 hover:shadow-elegant transition-all duration-300;
+    @apply bg-white/5 backdrop-blur-xl rounded-2xl shadow-card border border-white/10 hover:shadow-card-hover hover:border-primary-400/20 transition-all duration-500;
   }
 
-  /* Luxury button */
+  /* Luxury button — Primary */
   .btn-luxury {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-dustyrose text-white rounded-full font-semibold hover:shadow-elegant transition-all hover:scale-105;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-400 to-accent-500 text-secondary-950 rounded-xl font-semibold hover:shadow-glow transition-all hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Glass button — Secondary */
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-ivory rounded-xl font-semibold border border-white/20 hover:bg-white/20 hover:border-primary-400/30 transition-all;
+  }
+
+  /* Section gradient backgrounds */
+  .section-dark {
+    background: linear-gradient(180deg, #1A1625 0%, #241F31 100%);
+  }
+
+  .section-darker {
+    background: linear-gradient(180deg, #241F31 0%, #1A1625 100%);
+  }
+
+  /* Glow effect behind elements */
+  .glow-rose {
+    box-shadow: 0 0 80px 20px rgba(232, 180, 184, 0.1);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 80px 20px rgba(201, 169, 110, 0.1);
+  }
+
+  /* Bokeh particles */
+  .bokeh {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(1px);
+    opacity: 0.3;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Shimmer effect for loading/badges */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(232, 180, 184, 0.1) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2s linear infinite;
   }
 
   /* Line clamp utilities */
@@ -75,10 +133,10 @@
     display: none;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar — dark theme */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.primary.200') transparent;
+    scrollbar-color: rgba(232, 180, 184, 0.3) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -91,16 +149,22 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: theme('colors.primary.200');
+    background-color: rgba(232, 180, 184, 0.3);
     border-radius: 3px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: theme('colors.primary.300');
+    background-color: rgba(232, 180, 184, 0.5);
   }
 }
 
 /* Toaster custom styles */
 .toast-container {
   font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(232, 180, 184, 0.3);
+  color: #F5F0EB;
 }

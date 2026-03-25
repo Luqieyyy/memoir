@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { usePublicEvent, useWishes, usePhotos, useRSVP, useTheme } from '@/lib/hooks';
-import { WeddingHero, GuestSubmissionForm, RSVPForm, ThemeProvider, MemoryWall, WeddingTimeline, DEFAULT_WEDDING_TIMELINE, ShareCard } from '@/components/wedding';
+import { WeddingHero, GuestSubmissionForm, RSVPForm, ThemeProvider, MemoryWall, WeddingTimeline, DEFAULT_WEDDING_TIMELINE, ShareCard, SectionBackground } from '@/components/wedding';
 import { Spinner, Card } from '@/components/ui';
 import { Heart, Image, ChevronDown, Calendar, Clock } from 'lucide-react';
 import { FloatingPetals, CountdownTimer, MusicPlayer, Confetti, YouTubeMusicPlayer } from '@/components/effects';
@@ -152,101 +152,125 @@ export default function WeddingPage() {
               ))}
             </div>
 
-            {/* Section Content */}
+            {/* Section Content with Background Support */}
             <div className="animate-fade-in">
               {activeSection === 'rsvp' && (
-                <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-6 sm:p-8">
-                  {settingsLoading ? (
-                    <div className="flex justify-center py-12">
-                      <Spinner size="lg" />
-                    </div>
-                  ) : settings ? (
-                    <RSVPForm
-                      eventId={event.id}
-                      settings={settings}
-                      brideName={event.brideName}
-                      groomName={event.groomName}
-                      onSubmit={async (data) => {
-                        await submitRSVP(data);
-                        setShowConfetti(true);
-                        setTimeout(() => setShowConfetti(false), 5000);
-                      }}
-                    />
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-secondary-500">RSVP settings not available.</p>
-                    </div>
-                  )}
-                </div>
+                <SectionBackground
+                  config={event.sectionBackgrounds?.rsvp}
+                  sectionId="rsvp"
+                  className="rounded-2xl overflow-hidden"
+                >
+                  <div className="max-w-xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-soft p-6 sm:p-8">
+                    {settingsLoading ? (
+                      <div className="flex justify-center py-12">
+                        <Spinner size="lg" />
+                      </div>
+                    ) : settings ? (
+                      <RSVPForm
+                        eventId={event.id}
+                        settings={settings}
+                        brideName={event.brideName}
+                        groomName={event.groomName}
+                        onSubmit={async (data) => {
+                          await submitRSVP(data);
+                          setShowConfetti(true);
+                          setTimeout(() => setShowConfetti(false), 5000);
+                        }}
+                      />
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-secondary-500">RSVP settings not available.</p>
+                      </div>
+                    )}
+                  </div>
+                </SectionBackground>
               )}
 
               {activeSection === 'share' && (
-                <div className="space-y-8">
-                  {/* Share Invitation Card */}
-                  <ShareCard
-                    brideName={event.brideName}
-                    groomName={event.groomName}
-                    weddingDate={event.weddingDate}
-                    weddingId={event.weddingId}
-                    location={event.venue}
-                    className="max-w-md mx-auto"
-                  />
-
-                  {/* Guest Submission Form */}
-                  <div className="max-w-xl mx-auto">
-                    <div className="text-center mb-6">
-                      <h3 className="text-xl font-display font-semibold text-secondary-800 mb-2">
-                        Kongsi Ucapan & Foto
-                      </h3>
-                      <p className="text-secondary-500 text-sm">
-                        Tinggalkan ucapan atau muat naik foto untuk pengantin
-                      </p>
-                    </div>
-                    <GuestSubmissionForm
-                      eventId={event.id}
+                <SectionBackground
+                  config={event.sectionBackgrounds?.share}
+                  sectionId="share"
+                  className="rounded-2xl overflow-hidden py-8"
+                >
+                  <div className="space-y-8">
+                    {/* Share Invitation Card */}
+                    <ShareCard
                       brideName={event.brideName}
                       groomName={event.groomName}
-                      onSuccess={() => {
-                        setShowConfetti(true);
-                        setTimeout(() => setShowConfetti(false), 5000);
-                        setActiveSection('memories');
-                      }}
+                      weddingDate={event.weddingDate}
+                      weddingId={event.weddingId}
+                      location={event.venue}
+                      className="max-w-md mx-auto"
                     />
+
+                    {/* Guest Submission Form */}
+                    <div className="max-w-xl mx-auto">
+                      <div className="text-center mb-6">
+                        <h3 className="text-xl font-display font-semibold text-secondary-800 mb-2">
+                          Kongsi Ucapan & Foto
+                        </h3>
+                        <p className="text-secondary-500 text-sm">
+                          Tinggalkan ucapan atau muat naik foto untuk pengantin
+                        </p>
+                      </div>
+                      <GuestSubmissionForm
+                        eventId={event.id}
+                        brideName={event.brideName}
+                        groomName={event.groomName}
+                        onSuccess={() => {
+                          setShowConfetti(true);
+                          setTimeout(() => setShowConfetti(false), 5000);
+                          setActiveSection('memories');
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
+                </SectionBackground>
               )}
 
               {activeSection === 'timeline' && (
-                <div>
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                      Aturcara Majlis
-                    </h2>
-                    <p className="text-secondary-500">
-                      Tentative program hari bahagia kami
-                    </p>
+                <SectionBackground
+                  config={event.sectionBackgrounds?.timeline}
+                  sectionId="timeline"
+                  className="rounded-2xl overflow-hidden py-8"
+                >
+                  <div>
+                    <div className="text-center mb-8">
+                      <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
+                        Aturcara Majlis
+                      </h2>
+                      <p className="text-secondary-500">
+                        Tentative program hari bahagia kami
+                      </p>
+                    </div>
+                    <WeddingTimeline events={event.timeline || DEFAULT_WEDDING_TIMELINE} variant="vertical" />
                   </div>
-                  <WeddingTimeline events={event.timeline || DEFAULT_WEDDING_TIMELINE} variant="vertical" />
-                </div>
+                </SectionBackground>
               )}
 
               {activeSection === 'memories' && (
-                <div>
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
-                      Memory Wall
-                    </h2>
-                    <p className="text-secondary-500">
-                      Wishes and photos from friends and family
-                    </p>
+                <SectionBackground
+                  config={event.sectionBackgrounds?.memories}
+                  sectionId="memories"
+                  className="rounded-2xl overflow-hidden py-8"
+                >
+                  <div>
+                    <div className="text-center mb-8">
+                      <h2 className="text-2xl font-display font-semibold text-secondary-800 mb-2">
+                        Memory Wall
+                      </h2>
+                      <p className="text-secondary-500">
+                        Wishes and photos from friends and family
+                      </p>
+                    </div>
+                    <MemoryWall
+                      wishes={wishes}
+                      photos={photos}
+                      wishesLoading={wishesLoading}
+                      photosLoading={photosLoading}
+                    />
                   </div>
-                  <MemoryWall
-                    wishes={wishes}
-                    photos={photos}
-                    wishesLoading={wishesLoading}
-                    photosLoading={photosLoading}
-                  />
-                </div>
+                </SectionBackground>
               )}
             </div>
           </div>
